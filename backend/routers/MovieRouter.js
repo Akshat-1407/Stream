@@ -1,0 +1,19 @@
+const express = require('express');
+
+const {
+    getActionMovies,
+    getAnimeMovies,
+    getRomanceMovies,
+    getHorrorMovies,
+    getComedyMovies
+} = require("../controllers/MoviesController");
+
+const MovieRouter = express.Router();
+
+MovieRouter.get("/anime", getAnimeMovies);
+MovieRouter.get("/action", getActionMovies);
+MovieRouter.get("/comedy", getComedyMovies);
+MovieRouter.get("/horror", getHorrorMovies);
+MovieRouter.get("/romance", getRomanceMovies);
+
+module.exports = MovieRouter;
