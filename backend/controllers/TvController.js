@@ -2,10 +2,10 @@ const { TMDB_ENDPOINT, tmdbApi } = require("../utility/tmdb");
 
 const getMysteryTvShows = async (req, res) => {
     try {
-        const data = tmdbApi.get(TMDB_ENDPOINT.fetchMysteryTvShows);
+        const data = await tmdbApi.get(TMDB_ENDPOINT.fetchMysteryTvShows);
 
         res.status(200).json({
-            status: "sucess",
+            status: "success",
             response: data, 
         });
     } catch(err) {
@@ -18,10 +18,10 @@ const getMysteryTvShows = async (req, res) => {
 
 const getActionTvShows = async (req, res) => {
     try {
-        const data = tmdbApi.get(TMDB_ENDPOINT.fetchActionTvShows);
+        const data = await tmdbApi.get(TMDB_ENDPOINT.fetchActionTvShows);
 
         res.status(200).json({
-            status: "sucess",
+            status: "success",
             response: data, 
         });
     } catch(err) {
@@ -33,10 +33,10 @@ const getActionTvShows = async (req, res) => {
 }
 const getComedyTvShows = async (req, res) => {
     try {
-        const data = tmdbApi.get(TMDB_ENDPOINT.fetchComedyTvShows);
+        const data = await tmdbApi.get(TMDB_ENDPOINT.fetchComedyTvShows);
 
         res.status(200).json({
-            status: "sucess",
+            status: "success",
             response: data, 
         });
     } catch(err) {
@@ -48,10 +48,10 @@ const getComedyTvShows = async (req, res) => {
 }
 const getCrimeTvShows = async (req, res) => {
     try {
-        const data = tmdbApi.get(TMDB_ENDPOINT.fetchCrimeTvShows);
+        const data = await tmdbApi.get(TMDB_ENDPOINT.fetchCrimeTvShows);
 
         res.status(200).json({
-            status: "sucess",
+            status: "success",
             response: data, 
         });
     } catch(err) {
@@ -63,10 +63,10 @@ const getCrimeTvShows = async (req, res) => {
 }
 const getDramaTvShows = async (req, res) => {
     try {
-        const data = tmdbApi.get(TMDB_ENDPOINT.fetchDramaTvShows);
+        const data = await tmdbApi.get(TMDB_ENDPOINT.fetchDramaTvShows);
 
         res.status(200).json({
-            status: "sucess",
+            status: "success",
             response: data, 
         });
     } catch(err) {

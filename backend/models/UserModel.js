@@ -12,11 +12,14 @@ const wishlistItemSchema = new mongoose.Schema({
     id: { 
         type: String, 
         required: true 
-    }
+    },
+    media_type: { 
+        type: String, 
+        required: true
+    },
 });
 
 /*******************userModel*********************/
-// user create -> Jio cinema  -> set of rules
 
 const userSchema = new mongoose.Schema({
     name: {

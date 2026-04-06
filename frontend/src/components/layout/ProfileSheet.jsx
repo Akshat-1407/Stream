@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import Link from "next/link";
 import { ChevronRight, ExternalLink, X } from "lucide-react";
 import {
   Sheet,
@@ -20,65 +21,78 @@ const navItems = [
 ];
 
 export default function ProfileSheet() {
+
+  const [open, setOpen] = useState(false)
+
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
+
       <SheetTrigger>
-        <div className="size-8 rounded-full bg-linear-to-br from-orange-400 to-amber-500 cursor-pointer flex items-center justify-center overflow-hidden">
-         <span className="text-white text-xs font-medium">U</span>
+        <div className="size-9 rounded-full bg-linear-to-br from-orange-400 to-amber-500 cursor-pointer flex items-center justify-center overflow-hidden">
+          <span className="text-white text-xs font-medium">U</span>
         </div>
       </SheetTrigger>
 
-      <SheetContent
-        side="right"
-        className="w-full sm:max-w-md bg-[#0f0f0f] border-l border-white/10 p-0"
-      >
+      <SheetContent side="right" className="w-full sm:max-w-md bg-[#0f0f0f] border-l border-white/10 p-0">
+
         <SheetTitle className="sr-only">Profile Menu</SheetTitle>
         <SheetDescription className="sr-only">
           Navigation menu with profile options and links
         </SheetDescription>
 
         <div className="flex flex-col h-full overflow-y-auto">
-          
+
           {/* Profile Section */}
           <div className="p-6 pt-12">
             <div className="bg-[#1a1a1a] rounded-2xl p-6 flex flex-col items-center">
               <div className="size-24 rounded-full bg-linear-to-br from-orange-400 to-amber-500 flex items-center justify-center mb-4">
                 <span className="text-white text-2xl font-medium">U</span>
               </div>
-
               <h3 className="text-white text-xl font-semibold mb-4">
                 Guest
               </h3>
-              <button className="bg-linear-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white font-semibold text-base h-10 px-8 rounded-full transition-colors cursor-pointer">
+              <Link
+                href="/login"
+                className="bg-linear-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white flex items-center font-semibold text-base h-10 px-8 rounded-full transition-colors cursor-pointer"
+                onClick={() => {
+                  setOpen(false);
+                }}
+              >
                 Login
-              </button>
+              </Link>
             </div>
           </div>
 
           {/* Subscribe */}
           <div className="px-6">
-            <a
+            <Link
               href="/subscription"
               className="w-full flex items-center justify-between py-4 text-white hover:bg-white/5 rounded-lg px-2 transition-colors"
+              onClick={() => {
+                setOpen(false);
+              }}
             >
               <span className="text-base font-medium">Subscribe Now</span>
               <ChevronRight className="size-5 text-gray-400" />
-            </a>
+            </Link>
           </div>
 
           {/* Navigation */}
           <div className="px-6 border-t border-white/10 mt-2 pt-2">
             {navItems.map((item) => (
-              <a
+              <Link
                 key={item.label}
                 href={item.href}
-                className="w-full flex items-center justify-between py-4 text-white hover:bg-white/5 rounded-lg px-2 transition-colors"
+                className="w-full flex items-center justify-between py-4 text-white hover:bg-white/5 rounded-lg px-3 transition-colors"
+                onClick={() => {
+                  setOpen(false);
+                }}
               >
                 <span className="text-base font-medium">
                   {item.label}
                 </span>
                 <ExternalLink className="size-5 text-gray-400" />
-              </a>
+              </Link>
             ))}
           </div>
 
@@ -92,9 +106,6 @@ export default function ProfileSheet() {
             </button>
           </div>
         </div>
-
-            
-  
 
       </SheetContent>
     </Sheet>
