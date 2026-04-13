@@ -77,10 +77,30 @@ const getDramaTvShows = async (req, res) => {
     }
 }
 
+const getTvShowDetails = async (req, res) => {
+    try {
+        const { id } = req.query;
+        if (!id) throw new Error("Video Id is not defined.");
+        
+        const data = await tmdbApi.get(TMDB_ENDPOINT.fetchTvShowVideos(id));
+
+        res.status(200).json({
+            status: "success",
+            response: data
+        })
+    } catch (err) {
+        res.status(500).json({
+            status: "failure",
+            response: err.message,
+        })
+    }
+}
+
 module.exports = {
     getMysteryTvShows,
     getActionTvShows,
     getComedyTvShows,
     getCrimeTvShows,
     getDramaTvShows,
+    getTvShowDetails,
 }

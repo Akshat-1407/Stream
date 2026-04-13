@@ -3,7 +3,7 @@ const { tmdbApi, TMDB_ENDPOINT } = require("../utility/tmdb");
 const getNowPlaying = async (req, res) => {
     try {
         const data = await tmdbApi.get(TMDB_ENDPOINT.fetchNowPlaying);
-
+        
         res.status(200).json({
             status: "success",
             response: data

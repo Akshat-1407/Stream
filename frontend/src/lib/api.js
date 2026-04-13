@@ -39,7 +39,7 @@ export const ENDPOINT = {
   fetchVideoThumbnail: (id) => `/video/thumbnail?videoId=${id}`,
 };
 
-export const API_BASE_URL = "http://localhost:3000/api/"                 // process.env.NEXT_PUBLIC_API_BASE_URL;
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const media = (path) => `https://image.tmdb.org/t/p/original` + path;
 
@@ -85,7 +85,4 @@ api.interceptors.response.use(
 );
 
 
-export function getWatchUrl(vidId, mediaType) {
-  const prefix = mediaType === "tv" ? "tv" : "movies";
-  return `${prefix}/watch?id=${vidId}`;
-}
+

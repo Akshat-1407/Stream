@@ -1,4 +1,3 @@
-import { media } from "../../lib/api";
 import React from "react";
 import {
   Carousel,
@@ -10,7 +9,8 @@ import {
 import { Skeleton } from "../ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
-import { getWatchUrl } from "../../lib/api";
+import { media } from "../../lib/api";
+import { getWatchUrl } from "../../lib/utils";
 
 export default async function BannerSection({bannerData}) {
 
@@ -28,7 +28,7 @@ export default async function BannerSection({bannerData}) {
       <CarouselContent className="">
         {trendingPosts?.map((vid) => (
           <CarouselItem key={vid.id} className="w-full max-w-175 h-125">
-            <Link href="/">
+            <Link href={getWatchUrl(vid.id, vid.media_type)}>
               <Image
                 src={media(vid?.poster_path)}
                 alt=""

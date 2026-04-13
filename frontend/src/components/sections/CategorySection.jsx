@@ -1,5 +1,6 @@
 import React from "react";
-import { media, getWatchUrl } from "../../lib/api";
+import { media } from "../../lib/api"
+import { getWatchUrl } from "../../lib/utils";
 import Image from "next/image";
 import { Skeleton } from "../ui/skeleton";
 import Link from "next/link";
@@ -31,10 +32,10 @@ export default async function CategorySection({ fetcher, title, className }) {
           className
         )}
       >
-        {categoryPost?.map((post, index) => (
-          <Link key={index} href="/">
+        {categoryPost?.map((vid, index) => (
+          <Link key={index} href={getWatchUrl(vid?.id, vid?.media_type)}>
             <Image
-              src={media(post?.poster_path)}
+              src={media(vid?.poster_path)}
               alt=""
               width={200}
               height={300}
