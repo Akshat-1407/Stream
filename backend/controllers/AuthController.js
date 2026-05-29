@@ -43,6 +43,18 @@ async function signupHandler(req, res) {
             confirmPassword
         });
 
+        // Generate JWT containing user id
+        const authToken = await promisifiedJWTsign(
+            { id: newUser._id },
+            process.env.JWT_SECRET_KEY
+        );
+
+        // Store JWT in an HTTP-only cookie
+        res.cookie("jwt", authToken, {
+            maxAge: 1000 * 60 * 60 * 24,
+            httpOnly: true
+        });
+
         // Send Response (Don't send the password back!)
         newUser.confirmPassword = undefined;
         newUser.password = undefined; 
@@ -146,52 +158,45 @@ async function logoutHandler(req, res) {
     }
 }
 
-const protectRouteMiddleWare = async function (req, res, next) {
+const protectRouteMiddleware = async function (req, res, next) {
     try {
-        let jwttoken = req.cookies.jwt;
-        if (!jwttoken) throw new Error("UnAuthorized!");
-
-        let decryptedToken = await promisifiedJWTVerify(jwttoken, process.env.JWT_SECRET_KEY);
-
-        if (decryptedToken) {
-            let userId = decryptedToken.id;
-            // adding the userId to the req object
-            req.userId = userId;
-            console.log("authenticated");
-            next();
+        const jwttoken = req.cookies.jwt;
+        
+        if (!jwttoken) {
+            return res.status(401).json({
+                 message: "You are not logged in" 
+            });
         }
+
+        // Verify the token
+        const decoded = await promisifiedJWTVerify(jwttoken, process.env.JWT_SECRET_KEY);
+
+        // Find user but EXCLUDE the password and __v fields
+        // Using "-field" syntax in select tells Mongoose to leave it out
+        const user = await UserModel.findById(decoded.id) //.select("-password -__v");
+
+        if (!user) {
+            return res.status(401).json({ 
+                message: "User no longer exists" 
+            });
+        }
+
+        // Attach the user object
+        // console.log("Auth cont user: " ,user);
+        req.user = user; 
+        next();
+        
     } catch (err) {
-        res.status(500).json({
-            message: err.message,
+        const errorMessage = err.name === 'TokenExpiredError' 
+            ? "Session expired, please login again" 
+            : "Invalid token, please login again";
+
+        res.status(401).json({ 
             status: "failure",
+            message: errorMessage 
         });
     }
 };
-
-/*
-// Gemini
-const protectRouteMiddleWare = async function (req, res, next) {
-    try {
-        const jwttoken = req.cookies.jwt;
-        if (!jwttoken) {
-            return res.status(401).json({ message: "You are not logged in" });
-        }
-
-        // Use the promisified verify
-        const decoded = await promisifiedJWTVerify(jwttoken, process.env.JWT_SECRET_KEY);
-
-        const user = await UserModel.findById(decoded.id);
-        if (!user) {
-            return res.status(401).json({ message: "User no longer exists" });
-        }
-
-        req.user = user; // Attach full user instead of just ID for convenience
-        next();
-    } catch (err) {
-        res.status(401).json({ message: "Invalid token, please login again" });
-    }
-};
-*/
 
 async function forgetPasswordHandler(req, res) {
     try {
@@ -332,5 +337,5 @@ module.exports = {
     logoutHandler,
     forgetPasswordHandler,
     resetPasswordHandler,
-    protectRouteMiddleWare
+    protectRouteMiddleware
 }

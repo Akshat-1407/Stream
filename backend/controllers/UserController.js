@@ -2,15 +2,14 @@ const UserModel = require("../models/UserModel");
 
 const getCurrentUser = async (req, res) => {
     try {
-        const userId = req.userId;
-        const { _id, name, email, createdAt, wishlist, isPremium } = await UserModel.findById(userId);
+        const userId = req.user._id;
+        const { _id, name, email, createdAt, isPremium } = await UserModel.findById(userId);
         res.status(200).json({
             user: {
                 _id: _id,
                 name: name,
                 email: email,
                 createdAt: createdAt,
-                wishlist: wishlist,
                 isPremium: isPremium,
             },
             status: "success",
