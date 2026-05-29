@@ -6,8 +6,9 @@ import { Skeleton } from "../ui/skeleton";
 import Link from "next/link";
 import { cn } from "../../lib/utils";
 import { InboxIcon } from "lucide-react";
+import Title from "../ui/Title";
 
-export default async function CategorySection({ fetcher, title, className }) {
+export default async function CategorySection({ fetcher, label, className }) {
   let categoryPost = await fetcher();
   // console.log("category post", categoryPost)
 
@@ -25,7 +26,7 @@ export default async function CategorySection({ fetcher, title, className }) {
 
   return (
     <div>
-      <h2 className="text-2xl font-medium mb-6 scroll-m-25">{title}</h2>
+      <h2 className="text-2xl font-medium mb-6 scroll-m-25">{label}</h2>
       <ul
         className={cn(
           "flex gap-4 w-full overflow-scroll scrollbar-hide",
@@ -33,7 +34,10 @@ export default async function CategorySection({ fetcher, title, className }) {
         )}
       >
         {categoryPost?.map((vid, index) => (
-          <Link key={index} href={getWatchUrl(vid?.id, vid?.media_type)}>
+          <Link
+            key={index}
+            href={getWatchUrl(vid?.id, vid?.media_type)}
+          >
             <Image
               src={media(vid?.poster_path)}
               alt=""
@@ -41,6 +45,7 @@ export default async function CategorySection({ fetcher, title, className }) {
               height={300}
               className="min-w-50 h-75 rounded-lg object-cover"
             />
+            <Title title={vid?.title || vid?.name}></Title>
           </Link>
         ))}
       </ul>

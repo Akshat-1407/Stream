@@ -13,7 +13,7 @@ const page = async ({ searchParams }) => {
   const key = await getMediaVideoKey(details);
 
   return (
-    <div className="mt-[80px]">
+    <div className="mt-20">
       {details ? (
         <>
           <iframe
@@ -36,7 +36,7 @@ const page = async ({ searchParams }) => {
         </>
       ) : (
         <div className="w-full h-[60vh] flex flex-col gap-4 items-center justify-center text-slate-400">
-          <FilmIcon className="w-[100px] h-[100px]" />
+          <FilmIcon className="w-25 h-25" />
           <p>Uh Oh! Video is unavailable.</p>
           <Link href={"/"} className={buttonVariants()}>
             Take me Home

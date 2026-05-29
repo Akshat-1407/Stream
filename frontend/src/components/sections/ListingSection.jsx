@@ -18,7 +18,7 @@ export default function ListingSection({ bannerData, categoryList }) {
         <Suspense key={index} fallback={<CategorySectionFallback />}>
           <div key={index} className="py-6 px-6">
             <CategorySection
-              title={vid.label}
+              label={vid.label}
               fetcher={vid.fetcher}
             />
           </div>

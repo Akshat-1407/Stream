@@ -56,7 +56,11 @@ export const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const { config } = error;
+    const { config, response } = error;
+
+    // Only retry on network errors or 5xx server errors
+    // DO NOT retry on 4xx client errors (validation errors)
+    const isRetryable = !response || response.status >= 500;
 
     // 1. Check if we should retry
     // We only retry if the request exists and we haven't hit the limit (e.g., 3 tries)
@@ -64,18 +68,18 @@ api.interceptors.response.use(
       config.retryCount = 0;
     }
 
-    if (config.retryCount < 2) { // This will allow 3 total attempts
+    if (isRetryable && config.retryCount < 4) { // This will allow 3 total attempts
       config.retryCount += 1;
       console.warn(`Retrying request... Attempt ${config.retryCount}`);
       
-      // Optional: Add a small delay (e.g., 500ms) before retrying
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Optional: Add a small delay before retrying
+      await new Promise(resolve => setTimeout(resolve, 500));
       
       return api(config); // Re-run the exact same request
     }
 
     // 2. If all retries fail, log and reject as you did before
-    console.error("API Error (All retries failed):", {
+    console.log("API Error (All retries failed):", {
       status: error.response?.status,
       message: error.message,
     });

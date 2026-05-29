@@ -3,107 +3,146 @@ const jwt = require('jsonwebtoken');
 const util = require("util");
 const promisify = util.promisify;
 const promisifiedJWTsign = promisify(jwt.sign);
-
+const promisifiedJWTVerify = promisify(jwt.verify);
 
 
 async function signupHandler(req, res) {
-    // 3. create the user
     try {
-        const userObject = req.body;
-        // 1. user -> data get , check email , password
-        if (!userObject.email || !userObject.password) {
+        const { name, email, password, confirmPassword } = req.body;
+
+        // Validation Logic
+        if (!name || !email || !password || !confirmPassword) {
             return res.status(400).json({
-                "message": "required data missing",
+                message: "All fields (name, email, password, confirmPassword) are required",
                 status: "failure"
-            })
+            });
         }
-        // 2. email se check -> if exist -> already loggedIn 
-        const user = await UserModel.findOne({ email: userObject.email });
-        if (user) {
+
+        if (password !== confirmPassword) {
             return res.status(400).json({
-                "message": "user is already logged in",
-                status: "success"
-            })
+                message: "Passwords do not match",
+                status: "failure"
+            });
         }
-        const newUser = await UserModel.create(userObject);
-        // hash the new user password
-        // send a response 
+
+        // Check if user already exists
+        const existingUser = await UserModel.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({
+                message: "Email already registered. Please login instead.",
+                status: "failure"
+            });
+        }
+
+        // Create the user 
+        // Note: Ideally, hash the password here or in your Mongoose Model Pre-save hook
+        const newUser = await UserModel.create({
+            name,
+            email,
+            password, 
+            confirmPassword
+        });
+
+        // Send Response (Don't send the password back!)
+        newUser.confirmPassword = undefined;
+        newUser.password = undefined; 
+        
         res.status(201).json({
-            "message": "user signup successfully",
+            message: "User signed up successfully",
             user: newUser,
             status: "success"
-        })
+        });
 
-        // user Email -> verification of there Email Id 
-        // welcome Email 
     } catch (err) {
-        console.log("err", err);
+        console.error("Signup Error:", err);
         res.status(500).json({
             message: err.message,
             status: "failure"
-        })
+        });
     }
+
+    // Send Welcom Email
 }
 
 async function loginHandler(req, res) {
-    // email,password -> if exist -> allow login 
-    //  cookies -> JWT -> they will bring back the token -> protected Route
     try {
-
+        // Extract credentials from request body
         const { email, password } = req.body;
+
+        // Find user by email
         const user = await UserModel.findOne({ email });
+
+        // Return error if user does not exist
         if (!user) {
-            return res.status(404).json({
+            return res.status(401).json({
                 message: "Invalid email or password",
                 status: "failure"
-            })
-        }
-        // hash the password   
-        const areEqual = password == user.password;
-        if (!areEqual) {
-            return res.status(400).json({
-                message: "Invalid email or password",
-                status: "failure"
-            })
+            });
         }
 
-        // token create
-        const authToken = await promisifiedJWTsign({ id: user["_id"] }, process.env.JWT_SECRET_KEY);
-        // // token -> cookies
+        // hash the password using bcrypt
+
+        // Verify password
+        const areEqual = password === user.password;
+
+        // Return error if password is incorrect
+        if (!areEqual) {
+            return res.status(401).json({
+                message: "Invalid email or password",
+                status: "failure"
+            });
+        }
+
+        // Generate JWT containing user id
+        const authToken = await promisifiedJWTsign(
+            { id: user._id },
+            process.env.JWT_SECRET_KEY
+        );
+
+        // Store JWT in an HTTP-only cookie
         res.cookie("jwt", authToken, {
             maxAge: 1000 * 60 * 60 * 24,
-            httpOnly: true, // it can only be accessed by the server
-        })
-        // // res send 
+            httpOnly: true
+        });
+
+        // Remove the password form the response
+        user.confirmPassword = undefined;
+        user.password = undefined; 
+
+        // Send successful login response
         res.status(200).json({
-            message: "login successfully",
+            message: "Login successful",
             status: "success",
             user: user
-        })
-
-
+        });
 
     } catch (err) {
         console.log("err", err);
         res.status(500).json({
             message: err.message,
             status: "failure"
-        })
+        });
     }
 }
 
 async function logoutHandler(req, res) {
     try {
-        res.clearCookie('jwt', { path: "/" });
-        res.json({
-            message: "logout successfully",
+        // Remove the JWT cookie from the browser
+        res.clearCookie("jwt", {
+            path: "/"
+        });
+
+        // Send success response
+        res.status(200).json({
+            message: "Logout successful",
             status: "success"
-        })
+        });
+
     } catch (err) {
         res.status(500).json({
             message: err.message,
             status: "failure"
-        })
+        });
     }
 }
 
@@ -112,7 +151,7 @@ const protectRouteMiddleWare = async function (req, res, next) {
         let jwttoken = req.cookies.jwt;
         if (!jwttoken) throw new Error("UnAuthorized!");
 
-        let decryptedToken = await promisifiedJWTVerify(jwttoken, JWT_SECRET_KEY);
+        let decryptedToken = await promisifiedJWTVerify(jwttoken, process.env.JWT_SECRET_KEY);
 
         if (decryptedToken) {
             let userId = decryptedToken.id;
@@ -128,6 +167,31 @@ const protectRouteMiddleWare = async function (req, res, next) {
         });
     }
 };
+
+/*
+// Gemini
+const protectRouteMiddleWare = async function (req, res, next) {
+    try {
+        const jwttoken = req.cookies.jwt;
+        if (!jwttoken) {
+            return res.status(401).json({ message: "You are not logged in" });
+        }
+
+        // Use the promisified verify
+        const decoded = await promisifiedJWTVerify(jwttoken, process.env.JWT_SECRET_KEY);
+
+        const user = await UserModel.findById(decoded.id);
+        if (!user) {
+            return res.status(401).json({ message: "User no longer exists" });
+        }
+
+        req.user = user; // Attach full user instead of just ID for convenience
+        next();
+    } catch (err) {
+        res.status(401).json({ message: "Invalid token, please login again" });
+    }
+};
+*/
 
 async function forgetPasswordHandler(req, res) {
     try {
@@ -167,15 +231,15 @@ async function forgetPasswordHandler(req, res) {
         //  send email
         // email -> req.body.email
         // otp -> add 
+        await sendOtp(user.name, user.email, user.otp);
 
         res.status(200).json({
             message: "otp is send successfully",
             status: "success",
             otp: otp,
-            resetURL: `http:localhost:3000/api/auth/resetPassword/${user["_id"]}`
+            resetURL: `http://localhost:8080/api/auth/resetPassword/${user["_id"]}`
         })
         
-        await sendOtp(user.name, user.email, user.otp);
         
     } catch (err) {
         console.log("err", err);

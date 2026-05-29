@@ -24,26 +24,23 @@ const wishlistItemSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, "name is required"],
+        required: true,
     },
     email: {
         type: String,
-        required: [true, "email is required"],
-        unique: [true, "email should be unique"],
+        required: true,
+        unique: true,
     },
     password: {
         type: String,
-        required: [true, "password is required"],
-        minLength: [6, "password should be atleast of 6 length"],
-    },
+        required: true,
+        minlength: 5,
+    }
+    ,
     confirmPassword: {
         type: String,
         required: true,
-        minLength: 6,
-        // custom validation
-        validate: [function () {
-            return this.password == this.confirmPassword;
-        }, "password should be equal to confirm password"]
+        minlength: 5,
     },
     createdAt: {
         type: Date,
@@ -53,43 +50,37 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    role: {
-        type: String,
-        // enum: ["user", "admin", "feed curator", "moderator"],
-        default: "user"
-    },
-    otp: {
-        type: String
-    },
-    otpExpiry: {
-        type: Date
-    },
-    wishlist: [wishlistItemSchema],
+    // role: {
+    //     type: String,
+    //     default: "user"
+    // },
+    // otp: {
+    //     type: String
+    // },
+    // otpExpiry: {
+    //     type: Date
+    // },
+    // wishlist: [wishlistItemSchema],
 });
 
 /******hooks in mongodb********/
-userSchema.pre("save", function (next) {
-    console.log("Pre save was called");
-    this.confirmPassword = undefined;
-    next();
+
+userSchema.pre("save", async function (next) {
+    const user = this;
+    const password = user.password;
+    const confirmPassword = user.confirmPassword;
+    if (password == confirmPassword) {
+        delete user.confirmPassword
+        // user.password = await bcrypt.hash(password, 10);
+    } else {
+        const err = new Error("Password and confirmPassword are not the same ")
+        next(err)
+    }
 })
 
-// these are the only possible values for the role
-const validRoles = ["user", "admin", "feed curator", "moderator"];
-
-userSchema.pre("save", function (next) {
-   const isValid= validRoles.find((role)=>{return this.role==role});
-   if(isValid){
-    next();
-   }else{
-    next("Role is not allowed ")
-   }
-})
-userSchema.post("save", function () {
-    console.log("post save was called");
-    this.__v = undefined;
-    this.password = undefined;
-})
+// userSchema.post("save", () => { 
+//     this.__v = undefined;
+// })
 
 const UserModel = mongoose.model("User", userSchema);
 

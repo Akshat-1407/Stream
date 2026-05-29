@@ -2,15 +2,13 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ChevronRight, ExternalLink, X } from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetTitle,
-  SheetDescription,
-  SheetClose,
-} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription, SheetClose } from "@/components/ui/sheet";
+import { ENDPOINT, api } from "../../lib/api";
+import { useAppSelector, useAppDispatch } from "@/redux/hooks";
+import { userLoggedOutDetails } from '@/redux/userSlice'
 
 const navItems = [
   { label: "Home", href: "/" },
@@ -24,12 +22,32 @@ export default function ProfileSheet() {
 
   const [open, setOpen] = useState(false)
 
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  const isLoggedIn = useAppSelector((state) => state.user.isLoggedIn)
+  const user = useAppSelector((state) => state.user.user)
+
+  const logoutHandler = async () => {
+    try {
+      const res = await api.get(ENDPOINT.logout);
+      if (res.data.status === "success") {
+        dispatch(userLoggedOutDetails());
+        setOpen(false);
+        router.push("/");
+      }
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || err.message || 'An error occurred';
+      console.log("err: ", errorMessage);
+    }
+  }
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
 
       <SheetTrigger>
-        <div className="size-9 rounded-full bg-linear-to-br from-orange-400 to-amber-500 cursor-pointer flex items-center justify-center overflow-hidden">
-          <span className="text-white text-xs font-medium">U</span>
+        <div className="size-9 rounded-full bg-linear-to-br  from-blue-800 to-cyan-800 cursor-pointer flex items-center justify-center overflow-hidden">
+          <span className="text-white text-xs font-medium">{user?.name.at(0).toUpperCase( ) || "G"}</span>
         </div>
       </SheetTrigger>
 
@@ -45,21 +63,37 @@ export default function ProfileSheet() {
           {/* Profile Section */}
           <div className="p-6 pt-12">
             <div className="bg-[#1a1a1a] rounded-2xl p-6 flex flex-col items-center">
-              <div className="size-24 rounded-full bg-linear-to-br from-orange-400 to-amber-500 flex items-center justify-center mb-4">
-                <span className="text-white text-2xl font-medium">U</span>
+              <div className="size-24 rounded-full bg-linear-to-br from-blue-800 to-cyan-800 flex items-center justify-center mb-4">
+                <span className="text-white text-3xl font-medium">{user?.name.at(0).toUpperCase(  ) || "G"}</span>
               </div>
-              <h3 className="text-white text-xl font-semibold mb-4">
-                Guest
-              </h3>
-              <Link
-                href="/login"
-                className="bg-linear-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white flex items-center font-semibold text-base h-10 px-8 rounded-full transition-colors cursor-pointer"
-                onClick={() => {
-                  setOpen(false);
-                }}
-              >
-                Login
-              </Link>
+              {isLoggedIn ? (
+                <div>              
+                  <h3 className="text-white text-xl font-semibold mb-4">
+                    {user?.name}
+                  </h3>
+                  <Button
+                    onClick={logoutHandler}
+                    className="bg-linear-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white flex items-center justify-center font-semibold text-base h-10 px-8 rounded-full transition-colors cursor-pointer"
+                  >
+                    Logout
+                  </Button>
+                </div>
+              ) : (
+                <div>              
+                  <h3 className="text-white text-xl font-semibold mb-4 flex justify-center">
+                    Guest
+                  </h3>
+                  <Link
+                    href="/login"
+                    className="bg-linear-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white flex items-center justify-center font-semibold text-base h-10 px-8 rounded-full transition-colors cursor-pointer"
+                    onClick={() => {
+                      setOpen(false);
+                    }}
+                  >
+                    Login
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
 

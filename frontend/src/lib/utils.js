@@ -11,6 +11,15 @@ export function getWatchUrl(vidId, mediaType) {
   return `${prefix}/watch?id=${vidId}`;
 }
 
+// export function getWatchUrl(vidId, mediaType, additionalData = {}) {
+//   const prefix = mediaType === "tv" ? "tv" : "movies";
+//   const params = new URLSearchParams({
+//     title: additionalData.title || "",
+//     overview: additionalData.overview || "",
+//   });
+//   return `${prefix}/watch?${params.toString()}`;
+// }
+
 export function injectMediaType(data, mediaType) {
   data.forEach((item) => {
      item["media_type"] = mediaType;
@@ -35,7 +44,7 @@ export  const getMediaVideoKey = async (details) => {
     const clip = findVideo("Clip");
 
     // Return the first one that isn't null
-    return trailer?.key || teaser?.key || clip?.key || videos[0] || null;
+    return [trailer?.key || teaser?.key || clip?.key || videos[0] || null, ];
 
   } catch (err) {
     console.error("Error extracting video key:", err);
