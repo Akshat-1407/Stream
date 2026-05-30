@@ -1,12 +1,33 @@
 const UserModel = require("../models/UserModel");
 const jwt = require('jsonwebtoken');
+const bcrypt = require("bcrypt");
+const crypto = require('crypto');
 const util = require("util");
 const promisify = util.promisify;
 const promisifiedJWTsign = promisify(jwt.sign);
 const promisifiedJWTVerify = promisify(jwt.verify);
+const sendWelcomeMail = require("../utility/welcomeMailSender");
+const sendOtpMail = require("../utility/otpMailSender");
+const otpGenerator = require("../utility/otpGenerator");
 
 
 async function signupHandler(req, res) {
+    /**
+     * Signup Flow
+     *
+     * 1. Receive user's registration details
+     *    (name, email, password, confirmPassword).
+     * 2. Validate that all required fields are provided.
+     * 3. Verify that password and confirmPassword match.
+     * 4. Check whether an account already exists with the given email.
+     * 5. Create a new user in the database.
+     * 6. Generate a JWT containing the user's id.
+     * 7. Store the JWT in an HTTP-only cookie.
+     * 8. Remove sensitive fields from the response.
+     * 9. Send a successful signup response.
+     * 10. Send a welcome email to the newly registered user.
+     */
+
     try {
         const { name, email, password, confirmPassword } = req.body;
 
@@ -35,7 +56,6 @@ async function signupHandler(req, res) {
         }
 
         // Create the user 
-        // Note: Ideally, hash the password here or in your Mongoose Model Pre-save hook
         const newUser = await UserModel.create({
             name,
             email,
@@ -52,31 +72,51 @@ async function signupHandler(req, res) {
         // Store JWT in an HTTP-only cookie
         res.cookie("jwt", authToken, {
             maxAge: 1000 * 60 * 60 * 24,
-            httpOnly: true
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict"
         });
 
         // Send Response (Don't send the password back!)
         newUser.confirmPassword = undefined;
         newUser.password = undefined; 
         
+        // Send successful signup response
         res.status(201).json({
             message: "User signed up successfully",
             user: newUser,
             status: "success"
         });
 
+        // Send Welcome Email
+        try {
+            await sendWelcomeMail(newUser.email, newUser.name);
+        } catch (emailErr) {
+            console.log("Post-signup email failed:", emailErr);
+        }
+
     } catch (err) {
         console.error("Signup Error:", err);
-        res.status(500).json({
+        return res.status(500).json({
             message: err.message,
             status: "failure"
         });
     }
-
-    // Send Welcom Email
 }
 
 async function loginHandler(req, res) {
+    /**
+     * Login Flow
+     *
+     * 1. Receive user's email and password.
+     * 2. Verify that a user exists with the provided email.
+     * 3. Verify that the provided password matches the stored password.
+     * 4. Generate a JWT containing the user's id.
+     * 5. Store the JWT in an HTTP-only cookie.
+     * 6. Remove sensitive fields from the response.
+     * 7. Send a successful login response.
+     */
+
     try {
         // Extract credentials from request body
         const { email, password } = req.body;
@@ -92,10 +132,8 @@ async function loginHandler(req, res) {
             });
         }
 
-        // hash the password using bcrypt
-
         // Verify password
-        const areEqual = password === user.password;
+        const areEqual = await bcrypt.compare(password,user.password);
 
         // Return error if password is incorrect
         if (!areEqual) {
@@ -114,7 +152,9 @@ async function loginHandler(req, res) {
         // Store JWT in an HTTP-only cookie
         res.cookie("jwt", authToken, {
             maxAge: 1000 * 60 * 60 * 24,
-            httpOnly: true
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict"
         });
 
         // Remove the password form the response
@@ -122,7 +162,7 @@ async function loginHandler(req, res) {
         user.password = undefined; 
 
         // Send successful login response
-        res.status(200).json({
+        return res.status(200).json({
             message: "Login successful",
             status: "success",
             user: user
@@ -130,7 +170,7 @@ async function loginHandler(req, res) {
 
     } catch (err) {
         console.log("err", err);
-        res.status(500).json({
+        return res.status(500).json({
             message: err.message,
             status: "failure"
         });
@@ -145,20 +185,20 @@ async function logoutHandler(req, res) {
         });
 
         // Send success response
-        res.status(200).json({
+        return res.status(200).json({
             message: "Logout successful",
             status: "success"
         });
 
     } catch (err) {
-        res.status(500).json({
+        return res.status(500).json({
             message: err.message,
             status: "failure"
         });
     }
 }
 
-const protectRouteMiddleware = async function (req, res, next) {
+async function protectRouteMiddleware(req, res, next) {
     try {
         const jwttoken = req.cookies.jwt;
         
@@ -172,7 +212,6 @@ const protectRouteMiddleware = async function (req, res, next) {
         const decoded = await promisifiedJWTVerify(jwttoken, process.env.JWT_SECRET_KEY);
 
         // Find user but EXCLUDE the password and __v fields
-        // Using "-field" syntax in select tells Mongoose to leave it out
         const user = await UserModel.findById(decoded.id) //.select("-password -__v");
 
         if (!user) {
@@ -182,7 +221,6 @@ const protectRouteMiddleware = async function (req, res, next) {
         }
 
         // Attach the user object
-        // console.log("Auth cont user: " ,user);
         req.user = user; 
         next();
         
@@ -191,7 +229,7 @@ const protectRouteMiddleware = async function (req, res, next) {
             ? "Session expired, please login again" 
             : "Invalid token, please login again";
 
-        res.status(401).json({ 
+        return res.status(401).json({ 
             status: "failure",
             message: errorMessage 
         });
@@ -199,143 +237,239 @@ const protectRouteMiddleware = async function (req, res, next) {
 };
 
 async function forgetPasswordHandler(req, res) {
-    try {
+    /**
+     * Forgot Password Flow
+     *
+     * 1. Receive user's email address.
+     * 2. Validate that the email is provided.
+     * 3. Check whether a user exists with that email.
+     * 4. Generate an OTP.
+     * 5. Store the OTP and its expiry time in the database.
+     * 6. Send the OTP to the user's registered email address.
+     * 7. Return a success response.
+     */
 
-        /****
-         * 1. user send the email : extract email
-         * 2. check if email is present in DB (user)
-              * if email is not present -> send a response to the user(user not found)
-           * *  if email is present -> 
-           * 3. create basic otp -> 
-           *        * user  ke saath token map krdo
-           *        *  send to the email
-           * 4. url -> reset url -> id      
-         *         
-         * ***/
-        //1.
-        if (req.body.email == undefined) {
-            return res.status(401).json({
+    try {
+        const { email } = req.body;
+        console.log(email);
+        // Validate email input
+        if (!email) {
+            return res.status(400).json({
                 status: "failure",
-                message: "Please enter the email for forget Password"
-            })
+                message: "Please provide an email address."
+            });
         }
-        //2.
-        const user = await UserModel.findOne({ email: req.body.email });
-        if (user == null) {
+
+        // Find user by email
+        const user = await UserModel.findOne({ email });
+
+        // Return error if user does not exist
+        if (!user) {
             return res.status(404).json({
                 status: "failure",
-                message: "user not found for this email"
-            })
+                message: "No user found with this email address."
+            });
         }
-        //3. 
+
+        // Generate OTP and set expiry time (10 minutes)
         const otp = otpGenerator();
         user.otp = otp;
-        user.otpExpiry = Date.now() + 1000 * 60 * 10;
+        user.otpExpiry = Date.now() + 10 * 60 * 1000;
 
+        // Save OTP details to database
         await user.save({ validateBeforeSave: false });
-        //  send email
-        // email -> req.body.email
-        // otp -> add 
-        await sendOtp(user.name, user.email, user.otp);
 
-        res.status(200).json({
-            message: "otp is send successfully",
+        // Send OTP to the user's email
+        await sendOtpMail(user.name, user.email, otp);
+
+        // Send success response
+        return res.status(200).json({
             status: "success",
-            otp: otp,
-            resetURL: `http://localhost:8080/api/auth/resetPassword/${user["_id"]}`
-        })
-        
-        
+            message: "OTP sent successfully.",
+            userId: user._id
+        });
+
     } catch (err) {
-        console.log("err", err);
-        res.status(500).json({
-            message: err.message,
-            status: "failure"
-        })
+        console.error("Forget Password Error:", err);
+
+        return res.status(500).json({
+            status: "failure",
+            message: err.message
+        });
+    }
+}
+
+async function verifyOtpHandler(req, res) {
+    /**
+     * VERIFY OTP FLOW
+     *
+     * 1. Receive userId and OTP.
+     * 2. Verify user exists.
+     * 3. Verify OTP exists.
+     * 4. Verify OTP is not expired.
+     * 5. Verify OTP matches.
+     * 6. Generate temporary reset token.
+     * 7. Remove OTP information.
+     * 8. Return reset token.
+     */
+
+    try {
+        const { userId, otp } = req.body;
+
+        // Return if userId or opt does not exist
+        if (!userId || !otp) {
+            return res.status(400).json({
+                status: "failure",
+                message: "User ID and OTP are required"
+            });
+        }
+
+        // Find user by id
+        const user = await UserModel.findById(userId);
+
+        // Return error if user does not exist
+        if (!user) {
+            return res.status(404).json({
+                status: "failure",
+                message: "User not found"
+            });
+        }
+ 
+
+        // Verify that a reset OTP exists
+        if (!user.otp) {
+            return res.status(401).json({
+                status: "failure",
+                message: "Unauthorized password reset attempt"
+            });
+        }
+
+        // Check OTP expiry
+        if (Date.now() > user.otpExpiry) {
+            return res.status(401).json({
+                status: "failure",
+                message: "OTP has expired"
+            });
+        }
+
+        // Verify OTP
+        if (user.otp !== otp) {
+            return res.status(401).json({
+                status: "failure",
+                message: "Invalid OTP"
+            });
+        }
+ 
+        // Generate temporary token 
+        // This token proves that OTP verification was completed successfully.
+        const resetToken = crypto.randomBytes(32).toString("hex");
+
+        user.resetPasswordToken = resetToken;
+        user.resetPasswordTokenExpiry = Date.now() + 10 * 60 * 1000;
+
+        // Remove OTP details after successful verification
+        user.otp = undefined;
+        user.otpExpiry = undefined;
+
+        // Save updated user information
+        await user.save({ validateBeforeSave: false });
+
+        // Send success response
+        return res.status(200).json({
+            status: "success",
+            message: "OTP verified successfully",
+            resetToken
+        });
+
+    } catch (err) {
+        return res.status(500).json({
+            status: "failure",
+            message: err.message
+        });
     }
 }
 
 async function resetPasswordHandler(req, res) {
+    /**
+     * RESET PASSWORD FLOW
+     *
+     * 1. Receive reset token.
+     * 2. Verify token exists.
+     * 3. Verify token has not expired.
+     * 4. Validate passwords.
+     * 5. Update password.
+     * 6. Remove reset token.
+     */
+
     try {
-        /**
-         * 1. id ,  id
-         * 2. if otp , password , confirmPassword are present
-         *      *  otp should n't be expires
-         *      * otp compare -> if matches
-         *      *  password update
-         *      *  re-route them to login page
-         * ***/
-        let resetDetails = req.body;
-        // required fields are there or not 
-        if (!resetDetails.password || !resetDetails.confirmPassword
-            || !resetDetails.otp
-            || resetDetails.password != resetDetails.confirmPassword) {
-            res.status(401).json({
+        const { resetToken, password, confirmPassword } = req.body;
+
+        // Ensure all required fields are provided.
+        if (!resetToken || !password || !confirmPassword) {
+            return res.status(400).json({
                 status: "failure",
-                message: "invalid request"
-            })
-        }
-        const userId = req.params.userId;
-        const user = await UserModel.findById(userId);
-        // if user is not present
-        if (user == null) {
-            return res.status(404).json({
-                status: "failure",
-                message: "user not found"
-            })
-        }
-        // if otp is not present  in db user
-        if (user.otp == undefined) {
-            return res.status(401).json({
-                status: "failure",
-                message: "unauthorized acces to reset Password"
-            })
+                message: "All fields are required"
+            });
         }
 
-        // if otp is expired
-        if (Date.now() > user.otpExpiry) {
+        // Prevent password mismatch.
+        if (password !== confirmPassword) {
+            return res.status(400).json({
+                status: "failure",
+                message: "Passwords do not match"
+            });
+        }
+
+        // Find the user who owns the provided reset token.
+        const user = await UserModel.findOne({
+            resetPasswordToken: resetToken
+        });
+
+        // Token is invalid if no matching user is found.
+        if (!user) {
             return res.status(401).json({
                 status: "failure",
-                message: "otp expired"
-            })
+                message: "Invalid reset token"
+            });
         }
-        // if otp is incorrect
-        if (user.otp != resetDetails.otp) {
+
+        // Ensure the reset token has not expired.
+        if (Date.now() > user.resetPasswordTokenExpiry) {
             return res.status(401).json({
                 status: "failure",
-                message: "otp is incorrect"
-            })
+                message: "Reset token expired"
+            });
         }
-        user.password = resetDetails.password;
-        user.confirmPassword = resetDetails.confirmPassword;
-        // remove the otp from the user
-        user.otp = undefined;
-        user.otpExpiry = undefined;
+
+        // Token is valid, update the user's password
+        user.password = password;
+        user.confirmPassword = confirmPassword;
+
+        // Invalidate the reset token immediately after a successful password change.
+        user.resetPasswordToken = undefined;
+        user.resetPasswordTokenExpiry = undefined;
+
         await user.save();
-        res.status(200).json({
+
+        return res.status(200).json({
             status: "success",
-            message: "password reset successfully"
-        })
+            message: "Password reset successfully"
+        });
 
     } catch (err) {
-        console.log("err", err);
-        res.status(500).json({
-            message: err.message,
-            status: "failure"
-        })
+        return res.status(500).json({
+            status: "failure",
+            message: err.message
+        });
     }
 }
-
-const otpGenerator = function () {
-    return Math.floor(100000 + Math.random() * 900000);
-}
-
 
 module.exports = {
     signupHandler,
     loginHandler,
     logoutHandler,
     forgetPasswordHandler,
+    verifyOtpHandler,
     resetPasswordHandler,
     protectRouteMiddleware
 }

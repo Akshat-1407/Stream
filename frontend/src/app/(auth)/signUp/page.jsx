@@ -73,7 +73,7 @@ export default function SignUp() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="bg-black border-stone-700 text-white focus-visible:ring-cyan-400"
+              className="bg-black border-stone-700 text-white focus-visible:ring-red-400"
             />
           </div>
 
@@ -86,7 +86,7 @@ export default function SignUp() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="bg-black border-stone-700 text-white focus-visible:ring-cyan-400"
+              className="bg-black border-stone-700 text-white focus-visible:ring-red-400"
             />
           </div>
 
@@ -98,7 +98,7 @@ export default function SignUp() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="bg-black border-stone-700 text-white focus-visible:ring-cyan-400"
+              className="bg-black border-stone-700 text-white focus-visible:ring-red-400"
             />
           </div>
 
@@ -110,7 +110,7 @@ export default function SignUp() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              className="bg-black border-stone-700 text-white focus-visible:ring-cyan-400"
+              className="bg-black border-stone-700 text-white focus-visible:ring-red-400"
             />
           </div>
 

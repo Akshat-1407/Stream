@@ -1,4 +1,4 @@
-const { TMDB_ENDPOINT, tmdbApi } = require("../utility/tmdb");
+const { TMDB_ENDPOINT, tmdbApi } = require("../services/tmdb");
 
 const getMysteryTvShows = async (req, res) => {
     try {

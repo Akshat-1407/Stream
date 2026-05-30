@@ -1,4 +1,4 @@
-const { TMDB_ENDPOINT, tmdbApi } = require("../utility/tmdb");
+const { TMDB_ENDPOINT, tmdbApi } = require("../services/tmdb");
 
 const getAnimeMovies = async (req, res) => {
     try {

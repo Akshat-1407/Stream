@@ -1,4 +1,4 @@
-const { tmdbApi, TMDB_ENDPOINT } = require("../utility/tmdb");
+const { tmdbApi, TMDB_ENDPOINT } = require("../services/tmdb");
 
 const getNowPlaying = async (req, res) => {
     try {

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const wishlistItemSchema = new mongoose.Schema({
     poster_path: { 
@@ -39,7 +40,6 @@ const userSchema = new mongoose.Schema({
     ,
     confirmPassword: {
         type: String,
-        required: true,
         minlength: 5,
     },
     createdAt: {
@@ -50,37 +50,44 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    otp: {
+        type: String
+    },
+    otpExpiry: {
+        type: Date
+    },
+    resetPasswordToken: {
+        type: String
+    },
+    resetPasswordTokenExpiry: {
+        type: Date
+    }
     // role: {
     //     type: String,
     //     default: "user"
-    // },
-    // otp: {
-    //     type: String
-    // },
-    // otpExpiry: {
-    //     type: Date
     // },
     // wishlist: [wishlistItemSchema],
 });
 
 /******hooks in mongodb********/
 
-userSchema.pre("save", async function (next) {
-    const user = this;
-    const password = user.password;
-    const confirmPassword = user.confirmPassword;
-    if (password == confirmPassword) {
-        delete user.confirmPassword
-        // user.password = await bcrypt.hash(password, 10);
-    } else {
-        const err = new Error("Password and confirmPassword are not the same ")
-        next(err)
+userSchema.pre("save", async function () {
+    // If password hasn't changed, move on.
+    if (!this.isModified('password')) {
+        return;
+    }   
+    
+    // Validation check
+    if (this.password !== this.confirmPassword) {
+        throw new Error("Password and confirmPassword do not match");
     }
-})
+    
+    // Hashing
+    this.password = await bcrypt.hash(this.password, 12);
 
-// userSchema.post("save", () => { 
-//     this.__v = undefined;
-// })
+    // Setting to undefined to prevent it from saving to the DB
+    this.confirmPassword = undefined;
+});
 
 const UserModel = mongoose.model("User", userSchema);
 

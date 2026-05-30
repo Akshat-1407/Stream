@@ -1,0 +1,220 @@
+async function forgetPasswordHandler(req, res) {
+    /**
+     * Forgot Password Flow
+     *
+     * 1. Receive user's email address.
+     * 2. Validate that the email is provided.
+     * 3. Check whether a user exists with that email.
+     * 4. Generate an OTP.
+     * 5. Store the OTP and its expiry time in the database.
+     * 6. Send the OTP to the user's registered email address.
+     * 7. Return a success response.
+     */
+
+    try {
+        const { email } = req.body;
+
+        // Validate email input
+        if (!email) {
+            return res.status(400).json({
+                status: "failure",
+                message: "Please provide an email address."
+            });
+        }
+
+        // Find user by email
+        const user = await UserModel.findOne({ email });
+
+        // Return error if user does not exist
+        if (!user) {
+            return res.status(404).json({
+                status: "failure",
+                message: "No user found with this email address."
+            });
+        }
+
+        // Generate OTP and set expiry time (10 minutes)
+        const otp = otpGenerator();
+        user.otp = otp;
+        user.otpExpiry = Date.now() + 10 * 60 * 1000;
+
+        // Save OTP details to database
+        await user.save({ validateBeforeSave: false });
+
+        // Send OTP to the user's email
+        await sendOtp(user.name, user.email, otp);
+
+        // Send success response
+        res.status(200).json({
+            status: "success",
+            message: "OTP sent successfully."
+        });
+
+    } catch (err) {
+        console.error("Forget Password Error:", err);
+
+        res.status(500).json({
+            status: "failure",
+            message: err.message
+        });
+    }
+}
+
+async function resetPasswordHandler(req, res) {
+    /**
+     * Reset Password Flow
+     *
+     * 1. Receive userId from route parameters.
+     * 2. Receive OTP, password, and confirmPassword from request body.
+     * 3. Validate all required fields.
+     * 4. Verify that the user exists.
+     * 5. Verify that an OTP was generated for the user.
+     * 6. Check whether the OTP has expired.
+     * 7. Verify that the provided OTP matches the stored OTP.
+     * 8. Update the user's password.
+     * 9. Clear OTP-related fields.
+     * 10. Save changes and return success response.
+     */
+
+    try {
+        const { otp, password, confirmPassword } = req.body;
+
+        // Validate required fields
+        if (
+            !otp ||
+            !password ||
+            !confirmPassword ||
+            password !== confirmPassword
+        ) {
+            return res.status(400).json({
+                status: "failure",
+                message: "Invalid request"
+            });
+        }
+
+        const { userId } = req.params;
+
+        // Find user by id
+        const user = await UserModel.findById(userId);
+
+        // Return error if user does not exist
+        if (!user) {
+            return res.status(404).json({
+                status: "failure",
+                message: "User not found"
+            });
+        }
+
+        // Verify that a reset OTP exists
+        if (!user.otp) {
+            return res.status(401).json({
+                status: "failure",
+                message: "Unauthorized password reset attempt"
+            });
+        }
+
+        // Check OTP expiry
+        if (Date.now() > user.otpExpiry) {
+            return res.status(401).json({
+                status: "failure",
+                message: "OTP has expired"
+            });
+        }
+
+        // Verify OTP
+        if (user.otp !== otp) {
+            return res.status(401).json({
+                status: "failure",
+                message: "Invalid OTP"
+            });
+        }
+
+        // Update password
+        user.password = password;
+        user.confirmPassword = confirmPassword;
+
+        // Remove OTP details after successful verification
+        user.otp = undefined;
+        user.otpExpiry = undefined;
+
+        // Save updated user information
+        await user.save();
+
+        // Send success response
+        return res.status(200).json({
+            status: "success",
+            message: "Password reset successfully"
+        });
+
+    } catch (err) {
+        console.error("Reset Password Error:", err);
+
+        return res.status(500).json({
+            status: "failure",
+            message: err.message
+        });
+    }
+}
+
+
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: 20 14.3% 4.1%;
+    --foreground: 0 0% 95%;
+    --card: 24 9.8% 10%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 9%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 346.8 77.2% 49.8%;
+    --primary-foreground: 355.7 100% 97.3%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 12 6.5% 15.1%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 346.8 77.2% 49.8%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+} 

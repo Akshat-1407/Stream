@@ -1,32 +1,31 @@
 const nodemailer = require('nodemailer');
 const ejs = require('ejs');
 const path = require('path');
-require('dotenv').config();
 
-async function sendOtp(userName, userEmail, otp) {
+async function sendWelcomeMail(userEmail, userName) {
     try {
 
-        const sendGridDetails = {
-            host: "smtp.sendgrid.net",
-            port: 465,
-            secure: true,
+        const brevoDetails = {
+            host: "smtp-relay.brevo.com",
+            port: 587,
+            secure: false,
             auth: {
-                user: "apikey",
-                pass: process.env.SENDGRID_API_KEY
-            }
+                user: process.env.BREVO_EMAIL,
+                pass: process.env.BREVO_SMTP_KEY,
+            },
         }
 
-        const transporter = nodemailer.createTransport(sendGridDetails);
+        const transporter = nodemailer.createTransport(brevoDetails);
 
         // 2. Render the EJS template
         // We pass the data { name: userName, email: userEmail } to the template
-        const data = await ejs.renderFile(path.join(__dirname, 'templates', 'otp.ejs'), { userName, otp });
+        const data = await ejs.renderFile(path.join(__dirname, "..", 'templates', 'welcome.ejs'), { userName, userEmail });
 
         // 3. Define Email Options
         const mail = {
             to: userEmail,
-            from: 'code.developer2099@gmail.com',
-            subject: 'Reset Password',
+            from: process.env.SENDER_EMAIL,
+            subject: 'Welcome to the Team!',
             html: data // This is the rendered HTML from EJS
         };
 
@@ -39,4 +38,4 @@ async function sendOtp(userName, userEmail, otp) {
     }
 }
 
-module.exports = sendOtp;
+module.exports = sendWelcomeMail;

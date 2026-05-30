@@ -14,16 +14,16 @@ const footerLinks = {
     { label: "Premium", href: "/subscription" },
   ],
   help: [
-    { label: "Help Center", href: "/help" },
-    { label: "Account", href: "/account" },
-    { label: "Contact Us", href: "/contact" },
-    { label: "FAQs", href: "/faqs" },
+    { label: "Help Center", href: "/" },
+    { label: "Account", href: "/" },
+    { label: "Contact Us", href: "/" },
+    { label: "FAQs", href: "/" },
   ],
   legal: [
-    { label: "Terms of Use", href: "/terms" },
-    { label: "Privacy Policy", href: "/privacy" },
-    { label: "Cookie Policy", href: "/cookies" },
-    { label: "Content Grievance", href: "/grievance" },
+    { label: "Terms of Use", href: "/" },
+    { label: "Privacy Policy", href: "/" },
+    { label: "Cookie Policy", href: "/" },
+    { label: "Content Grievance", href: "/" },
   ],
 }
 

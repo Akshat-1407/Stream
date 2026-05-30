@@ -6,6 +6,7 @@ export const ENDPOINT = {
   user: "/user",
   logout: "/auth/logout",
   forgetpassword: "/auth/forgetpassword",
+  verifyOtp: "/auth/verifyOtp/:userId",
   resetPassword: "/auth/resetPassword",
   payment: "/payment/order",
   updatePremium: "/payment/update-premium-access",
@@ -77,13 +78,7 @@ api.interceptors.response.use(
       
       return api(config); // Re-run the exact same request
     }
-
-    // 2. If all retries fail, log and reject as you did before
-    console.log("API Error (All retries failed):", {
-      status: error.response?.status,
-      message: error.message,
-    });
-
+    
     return Promise.reject(error);
   }
 );
