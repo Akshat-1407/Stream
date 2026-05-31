@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
-const wishlistItemSchema = new mongoose.Schema({
+// Watchlist Schema
+
+const watchlistItemSchema = new mongoose.Schema({
     poster_path: { 
         type: String, 
         required: true 
@@ -18,9 +20,14 @@ const wishlistItemSchema = new mongoose.Schema({
         type: String, 
         required: true
     },
+    description: {
+        type: String,
+        required: true        
+    }
 });
 
-/*******************userModel*********************/
+
+// User Schema
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -61,15 +68,12 @@ const userSchema = new mongoose.Schema({
     },
     resetPasswordTokenExpiry: {
         type: Date
-    }
-    // role: {
-    //     type: String,
-    //     default: "user"
-    // },
-    // wishlist: [wishlistItemSchema],
+    },
+    wishlist: [watchlistItemSchema],
 });
 
-/******hooks in mongodb********/
+
+// MongoDb pre hook
 
 userSchema.pre("save", async function () {
     // If password hasn't changed, move on.
@@ -88,6 +92,7 @@ userSchema.pre("save", async function () {
     // Setting to undefined to prevent it from saving to the DB
     this.confirmPassword = undefined;
 });
+
 
 const UserModel = mongoose.model("User", userSchema);
 

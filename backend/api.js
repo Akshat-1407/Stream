@@ -4,7 +4,6 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const cors = require('cors');
 const PORT = 8080;
-
 const dotenv = require("dotenv");
 dotenv.config(); 
 

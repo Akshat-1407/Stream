@@ -6,7 +6,7 @@ import { Skeleton } from "../ui/skeleton";
 import Link from "next/link";
 import { cn } from "../../lib/utils";
 import { InboxIcon } from "lucide-react";
-import Title from "../ui/Title";
+import Title from "../ui/atom/Title";
 
 export default async function CategorySection({ fetcher, label, className }) {
   let categoryPost = await fetcher();
@@ -36,7 +36,7 @@ export default async function CategorySection({ fetcher, label, className }) {
         {categoryPost?.map((vid, index) => (
           <Link
             key={index}
-            href={getWatchUrl(vid?.id, vid?.media_type)}
+            href={getWatchUrl(vid?.id, vid?.media_type, vid?.poster_path, vid?.name || vid?.title, vid?.overview)}
           >
             <Image
               src={media(vid?.poster_path)}

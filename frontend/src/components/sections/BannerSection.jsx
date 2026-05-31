@@ -1,16 +1,10 @@
 import React from "react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "../ui/carousel";
 import { Skeleton } from "../ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
 import { media } from "../../lib/api";
 import { getWatchUrl } from "../../lib/utils";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel";
 
 export default async function BannerSection({bannerData}) {
 
@@ -28,7 +22,7 @@ export default async function BannerSection({bannerData}) {
       <CarouselContent className="">
         {trendingPosts?.map((vid) => (
           <CarouselItem key={vid.id} className="w-full max-w-175 h-125">
-            <Link href={getWatchUrl(vid.id, vid.media_type)}>
+            <Link href={getWatchUrl(vid?.id, vid?.media_type, vid?.poster_path, vid?.name || vid?.title, vid?.overview)}>
               <Image
                 src={media(vid?.poster_path)}
                 alt=""
@@ -40,8 +34,8 @@ export default async function BannerSection({bannerData}) {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <div className="absolute bottom-15 right-[8%] hidden md:flex">
-        <div className="flex w-15">
+      <div className="hidden sm:block">
+        <div className="flex justify-center w-15 absolute bottom-15 right-[8%]">
           <CarouselPrevious className="w-15 h-15 cursor-pointer" />
           <CarouselNext className="w-15 h-15 ml-2 cursor-pointer" />
         </div>

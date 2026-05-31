@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ENDPOINT, api } from '../../../lib/api'
-import { useAppDispatch } from '@/redux/hooks'
+import { useDispatch } from 'react-redux'
 import { userLoggedInDetails } from '@/redux/userSlice'
 
 export default function SignUp() {
@@ -18,7 +18,7 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const signupHandler = async () => {

@@ -1,16 +1,16 @@
 "use client";
 
 import { api, ENDPOINT } from "../lib/api";
-import { Loader2Icon } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useAppDispatch } from '@/redux/hooks'
+import { useDispatch } from 'react-redux'
 import { userLoggedInDetails } from "@/redux/userSlice";
 
 const AuthProvider = ({ children }) => {
 
     const [loading, setLoading] = useState(true);
 
-    const dispatch = useAppDispatch();
+    const dispatch = useDispatch();
 
     useEffect(() => {
 
@@ -19,7 +19,7 @@ const AuthProvider = ({ children }) => {
         const fetcher = async () => {
             try {
                 const res = await api.get(ENDPOINT.user);
-                // console.log("res auth prov: ", res);
+                
                 if (res.data.status === "success") {
                     dispatch(userLoggedInDetails(res?.data?.user));
                 }
@@ -40,7 +40,7 @@ const AuthProvider = ({ children }) => {
     if (loading)
         return (
             <div className="w-full h-screen flex items-center justify-center">
-                <Loader2Icon className="w-25 h-25 animate-spin" />
+                <LoaderCircle className="w-20 h-20 animate-spin" />
             </div>
         );
 

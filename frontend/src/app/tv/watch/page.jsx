@@ -1,14 +1,14 @@
 import { getMediaVideoKey } from "../../../lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-// import ShareButton from "@/components/ui/share-button";
-// import WishlistButton from "@/components/ui/wishlist-button";
+import ShareButton from "../../../components/ui/atom/ShareButton";
+import WatchlistButton from "../../../components/ui/atom/WatchlistButton";
 import { api, ENDPOINT } from "@/lib/api";
 import { FilmIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
 const page = async ({ searchParams }) => {
-  const { id } = await searchParams;
+  const { id, media_type, poster_path, name, description } = await searchParams;
   const details = (await api.get(ENDPOINT.getTvShowsDetails(id)));
   const key = await getMediaVideoKey(details);
 
@@ -21,18 +21,27 @@ const page = async ({ searchParams }) => {
             src={`https://www.youtube-nocookie.com/embed/${key}`}
             className="w-full aspect-video lg:h-[78vh]"
           />
-          {/* <div className="flex flex-wrap gap-4 px-4 lg:px-10 py-8 items-center">
-            <h1 className="text-2xl font-bold">{details.name}</h1>
-            <WishlistButton
-              wishlist={{
-                id: id,
-                poster_path: details.poster_path,
-                name: details.name,
-                media_type: details.media_type || "movie",
-              }}
-            />
-            <ShareButton />
-          </div> */}
+  
+          <div className="flex gap-4 px-5 lg:px-10 py-8 items-center justify-between">
+            <h1 className="text-3xl font-bold">{name}</h1>
+            <div className="flex gap-6 flex-col sm:flex-row">
+              <WatchlistButton
+                watchlist={{
+                  id: id,
+                  poster_path: poster_path,
+                  name: name,
+                  media_type: media_type || "movie",
+                  description: description
+                }}
+              />
+              <ShareButton />
+            </div>
+          </div>
+          <div className="p-5 lg:p-10">
+
+          <h2 className="text-2xl text-pink-600">Description</h2> <br />
+          <p>{description}</p>
+          </div>
         </>
       ) : (
         <div className="w-full h-[60vh] flex flex-col gap-4 items-center justify-center text-slate-400">

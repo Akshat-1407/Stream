@@ -4,23 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import { LoaderCircle } from "lucide-react";
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { ENDPOINT, api } from "../../../../lib/api"
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
 export default function VerifyOtp() {
   const router = useRouter();
@@ -37,17 +25,16 @@ export default function VerifyOtp() {
         userId, otp
       })
 
-      /**
-       * Store reset token temporarily.
-       */
+      // Store reset token temporarily.
       sessionStorage.setItem(
         "resetToken",
-        res.data.resetToken
+        res?.data?.resetToken
       );
 
       router.push("/resetPassword");
+
     } catch (err) {
-      const errorMessage = err.response?.data?.message || err.message || 'An error occurred';
+      const errorMessage = err.response?.data?.message || err?.message || 'An error occurred';
       console.log("err: ", errorMessage);
     } finally {
       setIsLoading(false);

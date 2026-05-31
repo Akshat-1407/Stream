@@ -6,9 +6,9 @@ export function cn(...inputs) {
 }
 
 
-export function getWatchUrl(vidId, mediaType) {
+export function getWatchUrl(vidId, mediaType, poster_path, name, description) {
   const prefix = mediaType === "tv" ? "tv" : "movies";
-  return `${prefix}/watch?id=${vidId}`;
+  return `${prefix}/watch?id=${vidId}&media_type=${prefix}&poster_path=${poster_path}&name=${name}&description=${description}`;
 }
 
 // export function getWatchUrl(vidId, mediaType, additionalData = {}) {
@@ -29,16 +29,15 @@ export function injectMediaType(data, mediaType) {
 
 export  const getMediaVideoKey = async (details) => {
   try {
-    // 1. Safe access to the results array
     const videos = details?.data?.response?.results || details?.results || [];
 
     if (videos.length === 0) return null;
 
-    // 2. Define our priority list (from best to "good enough")
+    // Define our priority list (from best to "good enough")
     const findVideo = (type) => 
       videos.find((v) => v.site === "YouTube" && v.type === type);
 
-    // 3. Try to find in order: Official Trailer, any Trailer, then Teaser
+    // Try to find in order: Official Trailer, any Trailer, then Teaser
     const trailer = findVideo("Trailer");
     const teaser = findVideo("Teaser");
     const clip = findVideo("Clip");
