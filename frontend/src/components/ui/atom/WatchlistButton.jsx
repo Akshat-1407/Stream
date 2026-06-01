@@ -17,7 +17,7 @@ function WatchlistButton({ watchlist }) {
       const res = await api.post(ENDPOINT.addToWishlist, watchlist);
 
       if (res.status == 200) {
-        alert("wishlist added");
+        alert("watchlist added");
       }
 
     } catch (err) {

@@ -14,7 +14,7 @@ const TMDB_ENDPOINT = {
   fetchHorrorMovies: `/discover/movie?language=en-US&with_genres=27`,
   fetchRomanceMovies: `/discover/movie?language=en-US&with_genres=10749`,
   fetchMovieVideos: (id) => `/movie/${id}/videos`, // Youtube Trailer Route
-  fetchMovieDetails: (id) => `/movie/${id}`,  // wishlist
+  fetchMovieDetails: (id) => `/movie/${id}`,  // watchlist
 
   // TV
 
@@ -24,7 +24,7 @@ const TMDB_ENDPOINT = {
   fetchDramaTvShows: `/discover/tv?language=en-US&with_genres=18`,
   fetchCrimeTvShows: `/discover/tv?language=en-US&with_genres=80`,
   fetchTvShowVideos: (id) => `/tv/${id}/videos`, // Youtube Trailer Route
-  fetchTvShowDetails: (id) => `/tv/${id}`,  // wishlist
+  fetchTvShowDetails: (id) => `/tv/${id}`,  // watchlist
 };
 
 

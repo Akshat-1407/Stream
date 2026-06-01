@@ -30,7 +30,7 @@ const getUserWishlist = async (req, res) => {
         const user = await UserModel.findById(userId);
 
         res.status(200).json({
-            data: user.wishlist,
+            data: user.watchlist,
             status: "success",
         });
 
@@ -58,16 +58,16 @@ const addToWishlist = async (req, res) => {
             return res.status(404).send("User not found");
         }
 
-        // Check if the item already exists in the wishlist
-        if (user.wishlist.find(item => item.id === id)) {
+        // Check if the item already exists in the watchlist
+        if (user.watchlist.find(item => item.id === id)) {
             return res.status(400).json({
-                message: "Item already in wishlist",
+                message: "Item already in watchlist",
                 status: "failure",
             });
         }
 
-        // Create wishlist item object
-        const wishlistItem = {
+        // Create watchlist item object
+        const watchlistItem = {
             poster_path,
             name,
             id,
@@ -75,10 +75,10 @@ const addToWishlist = async (req, res) => {
             description
         };
 
-        // Add item to wishlist in database
+        // Add item to watchlist in database
         await UserModel.findOneAndUpdate(
             { _id: userId },
-            { $push: { wishlist: wishlistItem } },
+            { $push: { watchlist: watchlistItem } },
             {
                 new: true,     // Return updated document
                 upsert: true,  // Create document if it doesn't exist

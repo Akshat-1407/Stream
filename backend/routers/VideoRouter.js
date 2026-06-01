@@ -1,9 +1,5 @@
 const express = require("express");
-const {
-    getVideoStream,
-    getAllVideos,
-    getThumbnail
-} = require("../controllers/VideoController.js");
+const { getVideoStream, getAllVideos, getThumbnail } = require("../controllers/VideoController.js");
 
 const VideoRouter = express.Router();
 

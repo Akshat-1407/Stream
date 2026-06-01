@@ -5,9 +5,9 @@ const { addToWishlist, getUserWishlist, getCurrentUser } = require("../controlle
 const UserRouter = express.Router();
 
 UserRouter.use(protectRouteMiddleware);
-UserRouter.get("/wishlist", getUserWishlist);
+UserRouter.get("/watchlist", getUserWishlist);
 UserRouter.get("/",getCurrentUser);
-UserRouter.post("/wishlist", addToWishlist);
+UserRouter.post("/watchlist", addToWishlist);
 
 
 module.exports = UserRouter;

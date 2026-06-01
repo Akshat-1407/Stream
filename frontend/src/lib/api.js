@@ -1,6 +1,7 @@
 import axios from "axios";
 
 export const ENDPOINT = {
+  // Auth
   login: "/auth/login",
   signup: "/auth/signup",
   user: "/user",
@@ -8,37 +9,43 @@ export const ENDPOINT = {
   forgetpassword: "/auth/forgetpassword",
   verifyOtp: "/auth/verifyOtp/:userId",
   resetPassword: "/auth/resetPassword",
+
+  // Payments
   payment: "/payment/order",
   updatePremium: "/payment/update-premium-access",
 
-  addToWishlist: "/user/wishlist",
-  getWishlist: "/user/wishlist",
+  // Watchlist
+  addToWishlist: "/user/watchlist",
+  getWishlist: "/user/watchlist",
 
+  // Discover
   discoverNowPlaying: "/discover/now-playing", // Banner
   discoverTrending: "/discover/trending",
   discoverTopRated: "/discover/top-rated",
   discoverUpcoming: "/discover/upcoming",
 
+  // Movies
   fetchAnimeMovies: `/movies/anime`, // Banner
   fetchActionMovies: `/movies/action`,
   fetchComedyMovies: `/movies/comedy`,
   fetchHorrorMovies: `/movies/horror`,
   fetchRomanceMovies: `/movies/romance`,
-
   getMovieDetails: (id) => `/movies/details?id=${id}`,
   
+  // Tv Shows
   fetchMysteryTvShows: `/tv/mystery`, // Banner
   fetchActionTvShows: `/tv/action`,
   fetchComedyTvShows: `/tv/comedy`,
   fetchCrimeTvShows: `/tv/crime`,
   fetchDramaTvShows: `/tv/drama`,
-  
   getTvShowsDetails: (id) => `/tv/details?id=${id}`,
 
+  // Video Streaming
   fetchAllStreamingVideos: `/video`,
   fetchStreamingVideo: (id) => `/video?id=${id}`,
   fetchVideoThumbnail: (id) => `/video/thumbnail?videoId=${id}`,
 };
+
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 

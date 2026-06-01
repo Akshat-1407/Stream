@@ -274,7 +274,7 @@ async function forgetPasswordHandler(req, res) {
         // Generate OTP and set expiry time (10 minutes)
         const otp = otpGenerator();
         user.otp = otp;
-        user.otpExpiry = Date.now() + 10 * 60 * 1000;
+        user.otpExpiry = Date.now() + 5 * 60 * 1000;
 
         // Save OTP details to database
         await user.save({ validateBeforeSave: false });
@@ -365,7 +365,7 @@ async function verifyOtpHandler(req, res) {
         const resetToken = crypto.randomBytes(32).toString("hex");
 
         user.resetPasswordToken = resetToken;
-        user.resetPasswordTokenExpiry = Date.now() + 10 * 60 * 1000;
+        user.resetPasswordTokenExpiry = Date.now() + 5 * 60 * 1000;
 
         // Remove OTP details after successful verification
         user.otp = undefined;

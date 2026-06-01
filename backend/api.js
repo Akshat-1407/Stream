@@ -27,11 +27,11 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", AuthRouter);
+app.use("/api/user", UserRouter);
 app.use("/api/discover", DiscoverRouter);
 app.use("/api/movies", MovieRouter);
 app.use("/api/tv", TvRouter);
 app.use("/api/video", VideoRouter);
-app.use("/api/user", UserRouter);
 
 
 

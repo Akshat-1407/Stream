@@ -63,13 +63,13 @@ const userSchema = new mongoose.Schema({
     otpExpiry: {
         type: Date
     },
-    resetPasswordToken: {
+    resetPasswordToken: {   
         type: String
     },
     resetPasswordTokenExpiry: {
         type: Date
     },
-    wishlist: [watchlistItemSchema],
+    watchlist: [watchlistItemSchema],
 });
 
 
