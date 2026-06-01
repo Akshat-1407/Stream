@@ -6,7 +6,7 @@ import { Input } from "@base-ui/react";
 import { Search, Crown } from "lucide-react"
 import { usePathname } from "next/navigation";
 import ProfileSheet from "./ProfileSheet";
-
+import { useDispatch, useSelector } from "react-redux"
 
 const navItems = [
   { label: "Home", key:"", href: "/" },
@@ -20,6 +20,7 @@ export function Header() {
 
   const path = usePathname();
   const activeTabKey = path.split("/")[1];
+  const userData = useSelector(state => state.user);
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[#0f0f0f] border-b border-gray-700">
@@ -39,8 +40,7 @@ export function Header() {
           >
             <Crown className="size-4"></Crown>
             <span>
-              {/* {userData?.user?.isPremium ? "" : "Go "}Premium */}
-              Go Premium
+              {userData?.user?.isPremium ? "" : "Go "}Premium
             </span>
           </Link>
 

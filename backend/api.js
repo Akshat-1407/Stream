@@ -16,6 +16,7 @@ const MovieRouter = require("./routers/MovieRouter");
 const TvRouter = require("./routers/TvRouter");
 const VideoRouter = require("./routers/VideoRouter");
 const UserRouter = require("./routers/UserRouter");
+const PaymentRouter = require("./routers/PaymentRouter");
 
 
 app.use(cors({
@@ -32,6 +33,7 @@ app.use("/api/discover", DiscoverRouter);
 app.use("/api/movies", MovieRouter);
 app.use("/api/tv", TvRouter);
 app.use("/api/video", VideoRouter);
+app.use("/api/payment", PaymentRouter);
 
 
 

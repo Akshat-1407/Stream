@@ -1,5 +1,5 @@
 const Razorpay = require("razorpay");
-const UserModel = require("../model/UserModel");
+const UserModel = require("../models/UserModel");
 
 const razorpay = new Razorpay({
     key_id: process.env.KEY_ID,
@@ -14,12 +14,13 @@ const getPaymentController = async (req, res) => {
             currency: "INR",
             receipt: "Receipt_Id" + Date.now(),
         });
-        res.json({
+        res.status(200).json({
             amount: data.amount,
             orderId: data.id,
         });
     } catch (err) {
         console.log(err);
+        res.status(500).json({ error: "Failed to create order" });
     }
 };
 
@@ -31,7 +32,7 @@ const updatePremiumAccessController = async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: "User not found" });
         }
-        user.premiumAccess = true;
+        // user.premiumAccess = true;
         //  find and update the user with the new premium access status
         await UserModel.findOneAndUpdate(
             { email: email },
