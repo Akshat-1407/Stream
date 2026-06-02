@@ -96,7 +96,7 @@ const getVideoStream = async (req, res) => {
         videoStream.pipe(res);
 
     } catch (err) {
-        console.error("Controller error:", err);
+        console.error("Video Stream error:", err);
         if (!res.headersSent) {
             res.status(500).json({ 
                 message: "Internal server error",

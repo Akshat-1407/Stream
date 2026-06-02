@@ -88,6 +88,7 @@ const addToWishlist = async (req, res) => {
         // Send success response
         return res.status(200).json({
             status: "success",
+            message: "Added to Watchlist"
         });
 
     } catch (err) {

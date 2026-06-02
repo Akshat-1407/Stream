@@ -1,4 +1,5 @@
 "use client"
+
 import React, { useState } from "react"
 import Link from "next/link"
 import OfferCard from "../../components/ui/atom/OfferCard"
@@ -17,17 +18,22 @@ const offers = [
       "Any 1 device at a time (up to Asli 4K quality)",
       "Download and watch anytime"
     ],
-    price: "29",
-    originalPrice: "59",
-    discountLabel: "51% OFF",
+    price: "399",
+    originalPrice: "599",
+    discountLabel: "33% OFF",
     duration: "1 Month"
   },
   {
     title: "Family",
-    features: ["Enjoy all Premium plan benefits on up to 4 devices"],
-    price: "89",
-    originalPrice: "149",
-    discountLabel: "40% OFF",
+    features: [
+      "Enjoy all Premium plan benefits on up to 4 devices",
+      "Watch simultaneously on multiple devices",
+      "Create up to 4 personalized profiles",
+      "Parental controls for family-friendly viewing"
+    ],
+    price: "799",
+    originalPrice: "999",
+    discountLabel: "20% OFF",
     duration: "1 Month"
   }
 ]
@@ -62,6 +68,11 @@ function SubscriptionPage() {
 
   const handlePaymentClick = async () => {
 
+    if (userData?.user?.isPremium) {
+      toast("You have already Purchased Premium");
+      return;
+    }
+
     if (activePrice === "") {
       toast("Select a card to join premium");
       return;
@@ -71,7 +82,7 @@ function SubscriptionPage() {
       if (!userData.isLoggedIn) {
         toast("Login to Access Premium")
         router.push("/login")
-        return
+        return;
       }
 
       const res = await api.post(`${ENDPOINT.payment}`, {
@@ -88,14 +99,14 @@ function SubscriptionPage() {
         order_id: res.data.orderId,
 
         handler: async function (response) {
-          // toast(`Payment Successfull - ${response.razorpay_order_id}`)
+          toast.success(`Payment Successfull - ${response.razorpay_order_id}`)
           try {
             const updatePremium = await api.patch(ENDPOINT.updatePremium, {
               email: userData.user?.email
             })
             if (updatePremium?.data?.message?.isPremium) {
               dispatch(updateUserPremium(true))
-              toast("Premium access updated successfully")
+              toast.success("Premium access updated successfully")
             }
             router.push("/jio+");
           } catch (err) {
@@ -106,14 +117,14 @@ function SubscriptionPage() {
 
       const rzp1 = new Razorpay(options)
       rzp1.on("payment.failed", function (response) {
-        console.error("Payment Failed:", response.error);
-        toast(response.error.description || "Payment could not be completed.");
+        toast.error(response.error.description || "Payment Failed!");
       });
 
       rzp1.open()
 
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || err.message || 'An error occurred';
+      toast.error(errorMessage);
     }
   }
 

@@ -4,12 +4,13 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ChevronRight, ExternalLink, X } from "lucide-react";
+import { ChevronRight, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription, SheetClose } from "@/components/ui/sheet";
 import { ENDPOINT, api } from "../../lib/api";
 import { useSelector, useDispatch } from "react-redux";
-import { userLoggedOutDetails } from '@/redux/userSlice'
+import { userLoggedOutDetails } from '@/redux/userSlice';
+import { toast } from "sonner";
 
 const navItems = [
   { label: "Home", href: "/" },
@@ -39,7 +40,7 @@ export default function ProfileSheet() {
       }
     } catch (err) {
       const errorMessage = err.response?.data?.message || err.message || 'An error occurred';
-      console.log("err: ", errorMessage);
+      toast.error(errorMessage)
     }
   }
 

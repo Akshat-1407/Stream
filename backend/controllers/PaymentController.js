@@ -19,8 +19,10 @@ const getPaymentController = async (req, res) => {
             orderId: data.id,
         });
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ error: "Failed to create order" });
+        res.status(500).json({ 
+            message: "Failed to create order",
+            status: "failure"
+        });
     }
 };
 
@@ -30,19 +32,26 @@ const updatePremiumAccessController = async (req, res) => {
         const email = req.body.email;
         const user = await UserModel.findOne({ email: email });
         if (!user) {
-            return res.status(404).json({ error: "User not found" });
+            return res.status(404).json({ 
+                error: "User not found" 
+            });
         }
         // user.premiumAccess = true;
-        //  find and update the user with the new premium access status
+        // Find and update the user with the new premium access status
         await UserModel.findOneAndUpdate(
             { email: email },
             { $set: { isPremium: true } },
             { new: true }
         );
-        res.json({ message: { isPremium: true } });
+        res.status(200).json({ 
+            message: { isPremium: true } }
+        );
+        
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ 
+            message: "Failed to Update Premium Access",
+            status: "failure"
+        });
     }
 };
 

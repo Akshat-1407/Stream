@@ -1,7 +1,7 @@
 
 import ListingSection from "../components/sections/ListingSection";
 import { api, ENDPOINT } from "../lib/api";
-import { injectMediaType } from "..//lib/utils";
+import { injectMediaType } from "../lib/utils";
 
 export default function Home() {
   const list = [

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "sonner";
 
 export default function ForgotPassword() {
   const router = useRouter();
@@ -22,13 +23,12 @@ export default function ForgotPassword() {
       const res = await api.post(ENDPOINT.forgetpassword, {
         email,
       })
+      toast.success(res?.data?.message);
+      router.push(`/verifyOtp/${res?.data?.userId}`);
 
-      router.push(
-        `/verifyOtp/${res?.data?.userId}`
-      );
     } catch (err) {
       const errorMessage = err.response?.data?.message || err.message || 'An error occurred';
-      console.log("err: ", errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -83,7 +83,7 @@ export default function ForgotPassword() {
             )}
           </Button>
 
-          <div className="flex items-center justify-center mt-6 text-sm">
+          <div className="flex items-center justify-center mt-3 text-sm">
             <Link
               href="/login"
               className="text-stone-400 hover:text-white transition-colors"

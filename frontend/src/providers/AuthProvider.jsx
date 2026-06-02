@@ -5,6 +5,7 @@ import { LoaderCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch } from 'react-redux'
 import { userLoggedInDetails } from "@/redux/userSlice";
+import { toast } from "sonner";
 
 const AuthProvider = ({ children }) => {
 
@@ -26,7 +27,7 @@ const AuthProvider = ({ children }) => {
 
             } catch (err) {
                 const errorMessage = err.response?.data?.message || err.message || 'User Needs to Login';
-                console.log("err: ", errorMessage);
+                toast.error(errorMessage);
 
             } finally {
                 setLoading(false);

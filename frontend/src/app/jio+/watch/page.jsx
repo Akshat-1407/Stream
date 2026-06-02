@@ -1,9 +1,9 @@
 "use client";
 
 import { API_BASE_URL } from '@/lib/api';
-import { FolderLockIcon, Crown, Lock } from 'lucide-react';
+import { FolderLockIcon, Crown } from 'lucide-react';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from "react-redux";
 import { useSearchParams } from 'next/navigation';
 

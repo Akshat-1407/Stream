@@ -6,7 +6,7 @@ import { Input } from "@base-ui/react";
 import { Search, Crown } from "lucide-react"
 import { usePathname } from "next/navigation";
 import ProfileSheet from "./ProfileSheet";
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 
 const navItems = [
   { label: "Home", key:"", href: "/" },

@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { getWatchUrl } from '../../lib/utils';
+import { toast } from "sonner";
 
 
 function Watchlist() {
@@ -23,11 +24,11 @@ function Watchlist() {
       try {
         const res = await api.get(ENDPOINT.getWishlist);
         if (res?.data?.data) {
-          setWatchlistData(res.data.data);
+          setWatchlistData(res?.data?.data);
         }
       } catch (err) {
         const errorMessage = err.response?.data?.message || err.message || 'An error occurred';
-        console.log("err: ", errorMessage);
+        toast.error(errorMessage);
         setWatchlistData([]);
       } finally {
         setIsLoading(false);

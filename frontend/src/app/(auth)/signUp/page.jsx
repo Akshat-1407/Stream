@@ -1,17 +1,17 @@
 'use client'
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { LoaderCircle } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ENDPOINT, api } from '../../../lib/api'
-import { useDispatch } from 'react-redux'
-import { userLoggedInDetails } from '@/redux/userSlice'
-import { toast } from 'sonner'
+import { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { LoaderCircle } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ENDPOINT, api } from '../../../lib/api';
+import { useDispatch } from 'react-redux';
+import { userLoggedInDetails } from '@/redux/userSlice';
+import { toast } from 'sonner';
 
 export default function SignUp() {
   const [name, setName] = useState('');
@@ -38,19 +38,13 @@ export default function SignUp() {
         const loggedInUser = res?.data?.user;
         dispatch(userLoggedInDetails(loggedInUser));
 
+        toast.success(res?.data?.message);
         router.push("/");
       }
 
     } catch (err) {
       const errorMessage = err.response?.data?.message || err.message || 'An error occurred';
-      console.error("err: ", errorMessage);
-      
-      toast.error(errorMessage, {
-        style: {
-          background: "#ef4444",
-          color: "white",
-        },
-      });
+      toast.error(errorMessage);
 
     } finally {
       setIsLoading(false);

@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { ENDPOINT, api } from "../../../../lib/api"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { toast } from "sonner";
 
 export default function VerifyOtp() {
   const router = useRouter();
@@ -30,12 +31,13 @@ export default function VerifyOtp() {
         "resetToken",
         res?.data?.resetToken
       );
-
+      
+      toast.success(res?.data?.message);
       router.push("/resetPassword");
 
     } catch (err) {
       const errorMessage = err.response?.data?.message || err?.message || 'An error occurred';
-      console.log("err: ", errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

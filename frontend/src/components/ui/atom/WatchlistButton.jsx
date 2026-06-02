@@ -5,6 +5,7 @@ import { useState } from "react";
 import { LoaderCircle, PlusIcon } from 'lucide-react';
 import { ENDPOINT, api } from "../../../lib/api"
 import { useSelector } from "react-redux";
+import { toast } from "sonner";
 
 function WatchlistButton({ watchlist }) {
 
@@ -17,13 +18,13 @@ function WatchlistButton({ watchlist }) {
       const res = await api.post(ENDPOINT.addToWishlist, watchlist);
 
       if (res.status == 200) {
-        alert("watchlist added");
+        toast(res?.data?.message);
       }
 
     } catch (err) {
 
       const errorMessage = err.response?.data?.message || err.message || 'An error occurred';
-      console.log("err: ", errorMessage);
+      toast.error(errorMessage);
 
     } finally {
       setLoading(false);

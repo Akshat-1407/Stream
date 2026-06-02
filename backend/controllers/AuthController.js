@@ -34,7 +34,7 @@ async function signupHandler(req, res) {
         // Validation Logic
         if (!name || !email || !password || !confirmPassword) {
             return res.status(400).json({
-                message: "All fields (name, email, password, confirmPassword) are required",
+                message: "All fields are required",
                 status: "failure"
             });
         }
@@ -96,7 +96,6 @@ async function signupHandler(req, res) {
         }
 
     } catch (err) {
-        console.error("Signup Error:", err);
         return res.status(500).json({
             message: err.message,
             status: "failure"
@@ -169,7 +168,6 @@ async function loginHandler(req, res) {
         });
 
     } catch (err) {
-        console.log("err", err);
         return res.status(500).json({
             message: err.message,
             status: "failure"
@@ -251,7 +249,7 @@ async function forgetPasswordHandler(req, res) {
 
     try {
         const { email } = req.body;
-        console.log(email);
+
         // Validate email input
         if (!email) {
             return res.status(400).json({
@@ -290,8 +288,6 @@ async function forgetPasswordHandler(req, res) {
         });
 
     } catch (err) {
-        console.error("Forget Password Error:", err);
-
         return res.status(500).json({
             status: "failure",
             message: err.message
@@ -437,7 +433,7 @@ async function resetPasswordHandler(req, res) {
         if (Date.now() > user.resetPasswordTokenExpiry) {
             return res.status(401).json({
                 status: "failure",
-                message: "Reset token expired"
+                message: "Reset window expired"
             });
         }
 

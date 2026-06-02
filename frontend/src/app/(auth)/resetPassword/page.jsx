@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "sonner";
 
 export default function ResetPassword() {
   const router = useRouter();
@@ -27,6 +28,7 @@ export default function ResetPassword() {
     }
   }, [router]);
 
+
   async function handleReset() {
 
     setIsLoading(true);
@@ -39,11 +41,12 @@ export default function ResetPassword() {
 
       if (res.status === 200) {
         sessionStorage.removeItem("resetToken");
+        toast.success(res?.data?.message);
         router.push("/login");
       }
     } catch (err) {
         const errorMessage = err?.response?.data?.message || err?.message || 'An error occurred';
-        console.log("err: ", errorMessage);
+        toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }

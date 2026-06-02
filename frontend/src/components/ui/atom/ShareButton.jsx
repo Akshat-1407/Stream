@@ -2,14 +2,15 @@
 
 import { Button } from "../button";
 import { Share2 } from 'lucide-react';
+import { toast } from "sonner";
 
 export default function ShareButton() {
     const copyUrl = async () => {
         try {
             await navigator.clipboard.writeText(window.location.href);
-            alert("URL copied!");
+            toast("URL copied!");
         } catch (error) {
-            console.error("Failed to copy URL:", error);
+            toast.error("Failed to copy URL");
         }
     };
     return (

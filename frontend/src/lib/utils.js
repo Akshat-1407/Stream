@@ -11,15 +11,6 @@ export function getWatchUrl(vidId, mediaType, poster_path, name, description) {
   return `${prefix}/watch?id=${vidId}&media_type=${prefix}&poster_path=${poster_path}&name=${name}&description=${description}`;
 }
 
-// export function getWatchUrl(vidId, mediaType, additionalData = {}) {
-//   const prefix = mediaType === "tv" ? "tv" : "movies";
-//   const params = new URLSearchParams({
-//     title: additionalData.title || "",
-//     overview: additionalData.overview || "",
-//   });
-//   return `${prefix}/watch?${params.toString()}`;
-// }
-
 export function injectMediaType(data, mediaType) {
   data.forEach((item) => {
      item["media_type"] = mediaType;
