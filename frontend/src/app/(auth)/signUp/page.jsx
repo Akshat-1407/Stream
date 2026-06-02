@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ENDPOINT, api } from '../../../lib/api'
 import { useDispatch } from 'react-redux'
 import { userLoggedInDetails } from '@/redux/userSlice'
+import { toast } from 'sonner'
 
 export default function SignUp() {
   const [name, setName] = useState('');
@@ -35,14 +36,22 @@ export default function SignUp() {
 
       if (res?.data?.status === "success") {
         const loggedInUser = res?.data?.user;
-        dispatch(userLoggedInDetails(loggedInUser))
+        dispatch(userLoggedInDetails(loggedInUser));
+
         router.push("/");
       }
-      
-    } catch(err) {
+
+    } catch (err) {
       const errorMessage = err.response?.data?.message || err.message || 'An error occurred';
-      console.log("err: ", errorMessage);
+      console.error("err: ", errorMessage);
       
+      toast.error(errorMessage, {
+        style: {
+          background: "#ef4444",
+          color: "white",
+        },
+      });
+
     } finally {
       setIsLoading(false);
     }
@@ -59,12 +68,7 @@ export default function SignUp() {
         </CardHeader>
 
         <CardContent className='space-y-4'>
-          {/* {error && (
-            <div className="p-3 bg-red-900/20 border border-red-700 rounded-md">
-              <p className="text-red-400 text-sm">{error}</p>
-            </div>
-          )} */}
-         
+
           <div className="space-y-2">
             <Label htmlFor="name" className="text-white">Full Name</Label>
             <Input

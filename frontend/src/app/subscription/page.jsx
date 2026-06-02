@@ -118,27 +118,25 @@ function SubscriptionPage() {
   }
 
   return (
-    
-    <div className="mx-auto p-4 md:pt-8 pt-4">
-      <div className="flex items-center justify-between ">
+    <div className="min-h-screen bg-linear-to-b from-slate-950 via-slate-900 to-slate-950">
+      <div className="mx-auto max-w-7xl px-4 py-4 md:py-6">
         <Link
           href="/"
-          className=" hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg"
+          className="inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-slate-800 text-gray-300 hover:text-white transition-colors duration-200 mb-5"
         >
           ←
         </Link>
-      </div>
 
-      <div className="md:mx-16">
-        <h1 className="md:text-4xl text-2xl  leading-none font-black md:text-12 mb-4 text-nowrap">
-          JioCinema Premium
-        </h1>
-        <p className="text-lg mb-8 w-[70%] text-wrap hidden md:block">
-          Entertainment Redefined - The best of Hollywood, Before TV
-          premieres, Blockbuster movies, Exclusive series, India{`'`}s biggest
-          Kids & Family hub + 365 days of reality!
-        </p>
-        <div className="flex flex-col md:flex-row w-full md:gap-8 gap-2">
+        <div className="space-y-3 mb-12">
+          <h1 className="text-4xl md:text-5xl font-black mb-7 bg-linear-to-r from-pink-500 to-pink-400 bg-clip-text text-transparent">
+            Stream Premium
+          </h1>
+          <p className="text-gray-400 text-xl max-w-5xl leading-relaxed">
+            Unlock unlimited entertainment with ad-free streaming, exclusive content, and premium features. Experience the best of Hollywood, blockbuster movies, and original series all in one place.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-10">
           {offers.map((offer, index) => (
             <OfferCard
               key={index}
@@ -153,15 +151,24 @@ function SubscriptionPage() {
             />
           ))}
         </div>
-        <button
-          className="bg-pink-600 p-3 md:mt-10 item-start flex font-medium rounded-lg ml-2 cursor-pointer"
-          onClick={handlePaymentClick}
-        >
-          Continue & Pay
-        </button>
+
+        <div className="flex flex-col sm:flex-row gap-4 items-start md:items-center">
+          <button
+            onClick={handlePaymentClick}
+            className={`px-8 py-3 rounded-lg font-semibold text-white transition-all duration-300 ${
+              activePrice
+                ? "bg-linear-to-r from-pink-600 to-pink-500 hover:shadow-md hover:shadow-pink-500/50 cursor-pointer"
+                : "bg-gray-700 cursor-not-allowed opacity-60"
+            }`}
+          >
+            Continue & Pay
+          </button>
+          <p className="text-gray-500 text-sm">
+            {activePrice ? "Ready to upgrade your experience" : "Select a plan to get started"}
+          </p>
+        </div>
       </div>
     </div>
-
   )
 }
 

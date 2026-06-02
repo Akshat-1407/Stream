@@ -34,8 +34,10 @@ export default function RootLayout({ children }) {
         <StoreProvider>
           <AuthProvider>
             <Header />
+            <Toaster position="top-right" style={{
+              top: "90px",
+            }} />
             {children}
-            <Toaster />
             <Footer />
           </AuthProvider>
         </StoreProvider>
