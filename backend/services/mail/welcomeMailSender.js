@@ -19,14 +19,25 @@ async function sendWelcomeMail(userEmail, userName) {
 
         // 2. Render the EJS template
         // We pass the data { name: userName, email: userEmail } to the template
-        const data = await ejs.renderFile(path.join(__dirname, "..", 'templates', 'welcome.ejs'), { userName, userEmail });
+        const data = await ejs.renderFile(path.join(__dirname, "..", "..", 'templates', 'welcome.ejs'), { userName, userEmail });
 
         // 3. Define Email Options
         const mail = {
             to: userEmail,
             from: process.env.SENDER_EMAIL,
-            subject: 'Welcome to the Team!',
-            html: data // This is the rendered HTML from EJS
+            subject: 'Welcome to Stream',
+            html: data,
+            attachments: [
+                {
+                    filename: "app_logo.png",
+                    path: path.join(
+                        process.cwd(),
+                        "public",
+                        "app_logo.png"
+                    ),
+                    cid: "stream-logo",
+                }
+            ]
         };
 
         // 4. Send the mail

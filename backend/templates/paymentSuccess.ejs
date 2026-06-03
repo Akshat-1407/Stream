@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stream Premium Activated</title>
+</head>
+
+<body style="margin:0;padding:0;background:#0b0b0f;font-family:Arial,sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
+    <tr>
+      <td align="center">
+
+        <table width="600" cellpadding="0" cellspacing="0" style="background:#15151d;border-radius:14px;overflow:hidden;">
+
+          <!-- Header -->
+          <tr>
+            <td align="center" style="padding:30px 20px 10px;">
+              <img src="cid:stream-logo" width="70" alt="Stream Logo" style="display:block;margin-bottom:10px;" />
+              <h1 style="margin:0;color:#ff2d7a;font-size:28px;">Stream</h1>
+              <p style="margin:8px 0 0;color:#a1a1aa;font-size:14px;">
+                Movies • TV Shows • Anime • Watchlist
+              </p>
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td style="padding:30px;color:#ffffff;">
+
+              <h2 style="color:#cfcfcf;margin:0 0 10px;">
+                🎉 Welcome to Stream Premium
+              </h2>
+
+              <p style="color:#cfcfcf;line-height:1.7;font-size:15px;">
+                Hi <%= userName %>,
+                <br><br>
+                Your subscription has been activated successfully. Thank you for choosing Stream Premium.
+              </p>
+
+              <!-- Receipt Card -->
+              <table
+                width="100%"
+                cellpadding="0"
+                cellspacing="0"
+                style="margin-top:25px;background:#0f0f14;border:1px solid #27272f;border-radius:10px;"
+              >
+                <tr>
+                  <td style="padding:20px;color:#ffffff;font-size:14px;line-height:2;">
+                    <strong style="color:#ff2d7a;">Plan:</strong> <%= planName %><br>
+                    <strong style="color:#ff2d7a;">Amount Paid:</strong> ₹<%= amount %><br>
+                    <strong style="color:#ff2d7a;">Payment ID:</strong> <%= paymentId %><br>
+                    <strong style="color:#ff2d7a;">Order ID:</strong> <%= orderId %><br>
+                    <strong style="color:#ff2d7a;">Status:</strong> Successful
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Benefits -->
+              <table
+                width="100%"
+                cellpadding="0"
+                cellspacing="0"
+                style="margin-top:20px;background:#12121a;border-radius:10px;"
+              >
+                <tr>
+                  <td style="padding:20px;">
+
+                    <h3 style="margin-top:0;color:#ff2d7a;">
+                      Your Premium Benefits
+                    </h3>
+
+                    <% if(planName === "Family") { %>
+
+                      <p style="margin:10px 0;color:#d4d4d8;">✓ Watch on up to 4 devices simultaneously</p>
+                      <p style="margin:10px 0;color:#d4d4d8;">✓ Create multiple personalized profiles</p>
+                      <p style="margin:10px 0;color:#d4d4d8;">✓ Family-friendly parental controls</p>
+                      <p style="margin:10px 0;color:#d4d4d8;">✓ Access to Premium content</p>
+
+                    <% } else { %>
+
+                      <p style="margin:10px 0;color:#d4d4d8;">✓ Ad-free streaming experience*</p>
+                      <p style="margin:10px 0;color:#d4d4d8;">✓ Access all Premium content</p>
+                      <p style="margin:10px 0;color:#d4d4d8;">✓ High-quality playback</p>
+                      <p style="margin:10px 0;color:#d4d4d8;">✓ Download and watch anytime</p>
+
+                    <% } %>
+
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin-top:20px;color:#a1a1aa;font-size:12px;">
+                * Except where platform restrictions apply.
+              </p>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:25px;text-align:center;border-top:1px solid #27272f;">
+              <p style="margin:0;color:#a1a1aa;font-size:12px;">
+                © 2026 Stream
+              </p>
+              <p style="margin-top:6px;color:#71717a;font-size:12px;">
+                This is an automated email. Please do not reply.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

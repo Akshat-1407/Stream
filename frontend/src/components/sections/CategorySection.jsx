@@ -6,7 +6,7 @@ import { Skeleton } from "../ui/skeleton";
 import Link from "next/link";
 import { cn } from "../../lib/utils";
 import { InboxIcon } from "lucide-react";
-import Title from "../ui/atom/Title";
+import Title from "../features/Title";
 
 export default async function CategorySection({ fetcher, label, className }) {
   let categoryPost = await fetcher();

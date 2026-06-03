@@ -1,5 +1,6 @@
 const Razorpay = require("razorpay");
 const UserModel = require("../models/UserModel");
+const sendPaymentSuccessMail = require("../services/mail/paymentSuccessMail")
 
 const razorpay = new Razorpay({
     key_id: process.env.KEY_ID,
@@ -14,12 +15,12 @@ const getPaymentController = async (req, res) => {
             currency: "INR",
             receipt: "Receipt_Id" + Date.now(),
         });
-        res.status(200).json({
+        return res.status(200).json({
             amount: data.amount,
             orderId: data.id,
         });
     } catch (err) {
-        res.status(500).json({ 
+        return res.status(500).json({ 
             message: "Failed to create order",
             status: "failure"
         });
@@ -29,26 +30,39 @@ const getPaymentController = async (req, res) => {
 // updation of status of premium access
 const updatePremiumAccessController = async (req, res) => {
     try {
-        const email = req.body.email;
-        const user = await UserModel.findOne({ email: email });
+        const { email, planName, amount, paymentId, orderId } = req.body;
+
+        const user = await UserModel.findOne({ email });
+
         if (!user) {
-            return res.status(404).json({ 
-                error: "User not found" 
+            return res.status(404).json({
+                error: "User not found"
             });
         }
-        // user.premiumAccess = true;
-        // Find and update the user with the new premium access status
-        await UserModel.findOneAndUpdate(
-            { email: email },
+
+        const updatedUser = await UserModel.findOneAndUpdate(
+            { email },
             { $set: { isPremium: true } },
             { new: true }
         );
-        res.status(200).json({ 
-            message: { isPremium: true } }
+
+        await sendPaymentSuccessMail(
+            updatedUser.name,
+            updatedUser.email,
+            planName,
+            amount,
+            paymentId,
+            orderId
         );
-        
+
+        return res.status(200).json({
+            message: {
+                isPremium: true
+            }
+        });
+
     } catch (err) {
-        res.status(500).json({ 
+        return res.status(500).json({
             message: "Failed to Update Premium Access",
             status: "failure"
         });

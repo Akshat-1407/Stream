@@ -7,16 +7,16 @@ const PORT = 8080;
 const dotenv = require("dotenv");
 dotenv.config(); 
 
-const connectDB = require("./utility/dbConnection");
+const connectDB = require("./config/dbConnection");
 connectDB();
 
-const AuthRouter = require("./routers/AuthRouter");
-const DiscoverRouter = require("./routers/DiscoverRouter");
-const MovieRouter = require("./routers/MovieRouter");
-const TvRouter = require("./routers/TvRouter");
-const VideoRouter = require("./routers/VideoRouter");
-const UserRouter = require("./routers/UserRouter");
-const PaymentRouter = require("./routers/PaymentRouter");
+const AuthRouter = require("./routes/AuthRouter");
+const DiscoverRouter = require("./routes/DiscoverRouter");
+const MovieRouter = require("./routes/MovieRouter");
+const TvRouter = require("./routes/TvRouter");
+const VideoRouter = require("./routes/VideoRouter");
+const UserRouter = require("./routes/UserRouter");
+const PaymentRouter = require("./routes/PaymentRouter");
 
 
 app.use(cors({
@@ -34,9 +34,6 @@ app.use("/api/movies", MovieRouter);
 app.use("/api/tv", TvRouter);
 app.use("/api/video", VideoRouter);
 app.use("/api/payment", PaymentRouter);
-
-
-
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}...`);

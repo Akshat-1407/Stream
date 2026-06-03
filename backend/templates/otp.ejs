@@ -1,42 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Email Verification OTP</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reset Password OTP - Stream</title>
 </head>
-<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;">
-    <div style="width: 100%; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
-        
-        <div style="text-align: center; margin-bottom: 20px;">
-            <h2 style="color: #333;">RESET PASSWORD Verification OTP</h2>
-        </div>
 
-        <h2 style="color: #333;">Hi <%= userName %> </h2>
-        
-        <div style="margin-bottom: 20px;">
-            <p style="color: #555; font-size: 16px;">Your One-Time Password (OTP) for resetting the password:</p>
-            
-            <table style="width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 20px; background-color: #ffffff; border: 2px dashed #333333; border-radius: 6px;">
+<body style="margin:0;padding:0;background:#0b0b0f;font-family:Arial,sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
+    <tr>
+      <td align="center">
+
+        <!-- Container -->
+        <table width="600" cellpadding="0" cellspacing="0" style="background:#15151d;border-radius:14px;overflow:hidden;">
+
+          <!-- Header -->
+          <tr>
+            <td align="center" style="padding:30px 20px 10px;">
+              <img src="cid:stream-logo" width="70" style="display:block;margin-bottom:10px;" />
+              <h1 style="margin:0;color:#ff2d7a;font-size:28px;">Stream</h1>
+            </td>
+          </tr>
+
+          <!-- Content -->
+          <tr>
+            <td style="padding:30px;color:#ffffff;">
+
+              <h2 style="margin:0 0 10px;color:#cfcfcf">Reset Your Password</h2>
+
+              <p style="color:#cfcfcf;font-size:14px;line-height:1.6;">
+                We received a request to reset your Stream account password. Use the OTP below to proceed.
+              </p>
+
+              <!-- OTP Box -->
+              <table width="100%" style="margin:25px 0;background:#0f0f14;border:1px dashed #ff2d7a;border-radius:10px;">
                 <tr>
-                    <td style="border-radius: 6px 6px 0 0; background-color: #f9f9f9; padding: 20px;">
-                        <div style="font-size: 32px; font-weight: bold; text-align: center; color: #007bff; letter-spacing: 5px;">
-                            <%= otp %>
-                        </div>
-                    </td>
+                  <td align="center" style="padding:25px;">
+                    <div style="font-size:30px;letter-spacing:6px;font-weight:bold;color:#ff2d7a;">
+                      <%= otp %>
+                    </div>
+                    <p style="margin-top:10px;color:#a1a1aa;font-size:12px;">
+                      Valid for <strong>5 minutes</strong>
+                    </p>
+                  </td>
                 </tr>
-                <tr>
-                    <td style="border-radius: 0 0 6px 6px; background-color: #f9f9f9; padding: 10px; border-top: 1px solid #eee;">
-                        <p style="font-size: 14px; color: #666666; text-align: center; margin: 0;">
-                            This code will expire shortly. Please use this OTP to reset your password.
-                        </p>
-                    </td>
-                </tr>
-            </table>
-            
-            <p style="font-size: 12px; color: #999; text-align: center;">
-                If you did not request a password reset, please ignore this email.
-            </p>
-        </div>
-    </div>
+              </table>
+
+              <p style="color:#a1a1aa;font-size:13px;line-height:1.6;">
+                If you did not request this, you can safely ignore this email.
+                Your account remains secure.
+              </p>
+
+              <!-- Footer -->
+              <p style="margin-top:25px;color:#a1a1aa;font-size:12px;">
+                © 2026 Stream<br/>
+                This is an automated email. Please do not reply.
+              </p>
+
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
 </body>
 </html>

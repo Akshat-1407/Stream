@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import OfferCard from "../../components/ui/atom/OfferCard"
+import OfferCard from "../../components/features/OfferCard"
 import { toast } from "sonner"
 import { api, ENDPOINT } from "@/lib/api"
 import { useDispatch, useSelector } from "react-redux"
@@ -99,11 +99,20 @@ function SubscriptionPage() {
         order_id: res.data.orderId,
 
         handler: async function (response) {
-          toast.success(`Payment Successfull - ${response.razorpay_order_id}`)
           try {
+            const selectedPlan =
+              activePrice === "399"
+                ? "Premium Monthly"
+                : "Family";
+
             const updatePremium = await api.patch(ENDPOINT.updatePremium, {
-              email: userData.user?.email
+              email: userData.user?.email,
+              planName: selectedPlan,
+              amount: activePrice,
+              paymentId: response.razorpay_payment_id,
+              orderId: response.razorpay_order_id,
             })
+            
             if (updatePremium?.data?.message?.isPremium) {
               dispatch(updateUserPremium(true))
               toast.success("Premium access updated successfully")

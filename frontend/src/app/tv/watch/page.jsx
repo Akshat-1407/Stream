@@ -1,7 +1,7 @@
 import { getMediaVideoKey } from "../../../lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import ShareButton from "../../../components/ui/atom/ShareButton";
-import WatchlistButton from "../../../components/ui/atom/WatchlistButton";
+import ShareButton from "../../../components/features/ShareButton";
+import WatchlistButton from "../../../components/features/WatchlistButton";
 import { api, ENDPOINT } from "@/lib/api";
 import { FilmIcon } from "lucide-react";
 import Link from "next/link";
@@ -19,7 +19,7 @@ const page = async ({ searchParams }) => {
           <iframe
             title={details?.key}
             src={`https://www.youtube-nocookie.com/embed/${key}`}
-            className="w-full aspect-video lg:h-[78vh]"
+            className="w-full aspect-video lg:h-[70vh]"
           />
   
           <div className="flex gap-4 px-5 lg:px-10 py-8 items-center justify-between">

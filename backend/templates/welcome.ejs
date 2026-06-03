@@ -1,70 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome Email</title>
-    <style>
-        @media screen and (max-width: 600px) {
-            .content { width: 100% !important; border-radius: 0 !important; }
-            .button { width: 100% !important; text-align: center; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome to Stream</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #f4f7f9; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr>
-            <td align="center" style="padding: 40px 0;">
-                <table class="content" width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                    
-                    <tr>
-                        <td align="center" style="background-color: #4A90E2; padding: 40px 20px;">
-                            <h1 style="color: #ffffff; margin: 0; font-size: 28px; letter-spacing: 1px;">Welcome to Our Community!</h1>
-                        </td>
-                    </tr>
 
-                    <tr>
-                        <td style="padding: 40px 30px;">
-                            <h2 style="color: #333333; margin-top: 0;">Hi, <%= userName %>! 👋</h2>
-                            <p style="color: #555555; font-size: 16px; line-height: 1.6;">
-                                We're thrilled to have you here. Your journey with us starts now, and we've prepared a few things to help you get settled.
-                            </p>
-                            
-                            <div style="background-color: #f9f9f9; border-left: 4px solid #4A90E2; padding: 15px; margin: 25px 0;">
-                                <p style="margin: 0; font-size: 14px; color: #666;">
-                                    <strong>Account Email:</strong> <%= userEmail %><br>
-                                    <strong>Status:</strong> Active
-                                </p>
-                            </div>
+<body style="margin:0;padding:0;background:#0b0b0f;font-family:Arial,sans-serif;">
 
-                            <p style="color: #555555; font-size: 16px; line-height: 1.6;">
-                                Click the button below to complete your profile and start exploring our features.
-                            </p>
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
+    <tr>
+      <td align="center">
 
-                            <table border="0" cellspacing="0" cellpadding="0" style="margin-top: 30px;">
-                                <tr>
-                                    <td align="center" bgcolor="#4A90E2" style="border-radius: 5px;">
-                                        <a href="https://yourwebsite.com/dashboard" target="_blank" style="font-size: 16px; font-weight: bold; color: #ffffff; text-decoration: none; padding: 15px 30px; display: inline-block;">
-                                            Get Started Now
-                                        </a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
+        <!-- Container -->
+        <table width="600" cellpadding="0" cellspacing="0" style="background:#15151d;border-radius:14px;overflow:hidden;">
 
-                    <tr>
-                        <td style="padding: 30px; background-color: #333333; color: #ffffff; text-align: center; font-size: 12px;">
-                            <p style="margin: 0 0 10px 0;">© 2026 Your Company, Inc.</p>
-                            <p style="margin: 0;">
-                                <a href="#" style="color: #4A90E2; text-decoration: none;">Privacy Policy</a> | 
-                                <a href="#" style="color: #4A90E2; text-decoration: none;">Unsubscribe</a>
-                            </p>
-                        </td>
-                    </tr>
-                </table>
+          <!-- Header -->
+          <tr>
+            <td align="center" style="padding:30px 20px 10px;">
+              <img src="cid:stream-logo" width="70" style="display:block;margin-bottom:10px;" />
+              <h1 style="margin:0;color:#ff2d7a;font-size:28px;">Stream</h1>
+              <p style="margin:8px 0 0;color:#a1a1aa;font-size:14px;">
+                Movies • TV Shows • Anime • Watchlist
+              </p>
             </td>
-        </tr>
-    </table>
+          </tr>
+
+          <!-- Welcome -->
+          <tr>
+            <td style="padding:30px;color:#ffffff;">
+              <h2 style="margin:0 0 10px;color:#cfcfcf">Welcome to Stream, <%= userName %> 👋</h2>
+
+              <p style="color:#cfcfcf;line-height:1.6;font-size:15px;">
+                We're excited to have you join Stream. Enjoy a world of movies, TV shows, and anime — all in one place.
+              </p>
+
+              <!-- Account Info -->
+              <table width="100%" style="margin-top:20px;background:#0f0f14;padding:15px;border-radius:10px;">
+                <tr>
+                  <td style="color:#a1a1aa;font-size:13px;">
+                    <strong style="color:#ffffff;">Name:</strong> <%= userName %><br/>
+                    <strong style="color:#ffffff;">Email:</strong> <%= userEmail %>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Premium Note -->
+              <div style="margin-top:20px;padding:12px 15px;border-left:3px solid #ff2d7a;background:#12121a;">
+                <p style="margin:0;color:#cfcfcf;font-size:13px;">
+                  <strong style="color:#ff2d7a;">Stream Premium:</strong>
+                  Upgrade anytime for an enhanced streaming experience.
+                </p>
+              </div>
+
+              <p style="margin-top:20px;color:#a1a1aa;font-size:12px;">
+                © 2026 Stream<br/>
+                This is an automated email. Please do not reply.
+              </p>
+
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
 </body>
 </html>

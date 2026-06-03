@@ -1,4 +1,3 @@
-
 const TMDB_ENDPOINT = {
 
   // Home Page
@@ -27,27 +26,4 @@ const TMDB_ENDPOINT = {
   fetchTvShowDetails: (id) => `/tv/${id}`,  // watchlist
 };
 
-
-const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original/";
-const TMDB_BASE_URL = "https://api.themoviedb.org/3/";
-
-
-const tmdbApi = {
-  get: async (endpoint) => {
-    const url = TMDB_BASE_URL + endpoint;
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${process.env.TMDB_API_KEY}`
-      }
-    });
-    
-    const data = await response.json();
-    return data;
-  }
-}
-
-module.exports={
-    tmdbApi, TMDB_ENDPOINT, 
-}
+module.exports = TMDB_ENDPOINT;

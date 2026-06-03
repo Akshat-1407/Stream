@@ -1,9 +1,9 @@
 "use client"
 
-import { Button } from "../button";
+import { Button } from "../ui/button";
 import { useState } from "react";
 import { LoaderCircle, PlusIcon } from 'lucide-react';
-import { ENDPOINT, api } from "../../../lib/api"
+import { ENDPOINT, api } from "../../lib/api"
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
 

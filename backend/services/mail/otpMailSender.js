@@ -19,14 +19,25 @@ async function sendOtpMail(userName, userEmail, otp) {
 
         // 2. Render the EJS template
         // We pass the data { name: userName, email: userEmail } to the template
-        const data = await ejs.renderFile(path.join(__dirname, "..", 'templates', 'otp.ejs'), { userName, otp });
+        const data = await ejs.renderFile(path.join(__dirname, "..", "..", 'templates', 'otp.ejs'), { userName, otp });
 
         // 3. Define Email Options
         const mail = {
-            to: userEmail,
             from: process.env.SENDER_EMAIL,
+            to: userEmail,
             subject: 'OTP',
-            html: data // This is the rendered HTML from EJS
+            html: data,
+            attachments: [
+                {
+                    filename: "app_logo.png",
+                    path: path.join(
+                        process.cwd(),
+                        "public",
+                        "app_logo.png"
+                    ),
+                    cid: "stream-logo",
+                }
+            ]
         };
 
         // 4. Send the mail

@@ -4,7 +4,7 @@ const path = require("path");
 
 const getAllVideos = async (req, res) => {
     try {
-        const videoDirectory = path.join(__dirname, "..", "videos");
+        const videoDirectory = path.join(__dirname, "..", "media", "videos");
         
         // 1. Non-blocking read
         const files = await fsPromises.readdir(videoDirectory);
@@ -42,7 +42,7 @@ const getVideoStream = async (req, res) => {
             return res.status(400).json({ message: "Video ID is required" });
         }
 
-        const videoPath = path.join(__dirname, "..", "videos", `${id}.mp4`);
+        const videoPath = path.join(__dirname, "..", "media", "videos", `${id}.mp4`);
 
         // 1. Check if file exists and get stats asynchronously
         let videoStats;
@@ -113,9 +113,9 @@ const getThumbnail = async (req, res) => {
             return res.status(400).json({ error: 'Video ID is required' });
         }
 
-        const thumbnailPath = path.join(__dirname, '..', 'thumbnails', `${videoId}.png`);       
+        const thumbnailPath = path.join(__dirname, '..', 'media', 'thumbnails', `${videoId}.png`);       
         
-        const defaultImage = path.join(__dirname, '..', 'thumbnails', 'no-thumbnail.png');
+        const defaultImage = path.join(__dirname, '..', 'media', 'thumbnails', 'no-thumbnail.png');
         res.sendFile(thumbnailPath, (err) => {
             if (err) res.sendFile(defaultImage);
         });

@@ -47,12 +47,16 @@ export const ENDPOINT = {
 };
 
 
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const media = (path) => `https://image.tmdb.org/t/p/original` + path;
 
 export const getStreamingVideoThumbnail = (id) =>
   API_BASE_URL + ENDPOINT.fetchVideoThumbnail(id);
+
+
+
+
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const api = axios.create({
   baseURL: API_BASE_URL,

@@ -1,47 +1,10 @@
-import React from "react";
 import { Skeleton } from "../ui/skeleton";
-import Image from "next/image";
-import Link from "next/link";
-import { media } from "../../lib/api";
-import { getWatchUrl } from "../../lib/utils";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel";
+import BannerCarousel from "./BannerCarousel";
 
-export default async function BannerSection({bannerData}) {
-
+export default async function BannerSection({ bannerData }) {
   const trendingPosts = await bannerData();
-  // console.log("trendingPosts", trendingPosts)
 
-  return (
-    <Carousel
-      opts={{
-        align: "center",
-        loop: true,
-      }}
-      className="w-full px-4 md:px-0"
-    >
-      <CarouselContent className="">
-        {trendingPosts?.map((vid) => (
-          <CarouselItem key={vid.id} className="w-full max-w-175 h-125">
-            <Link href={getWatchUrl(vid?.id, vid?.media_type, vid?.poster_path, vid?.name || vid?.title, vid?.overview)}>
-              <Image
-                src={media(vid?.poster_path)}
-                alt=""
-                width={700}
-                height={500}
-                className="bg-slate-600 rounded-lg object-cover"
-              />
-            </Link>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <div className="hidden sm:block">
-        <div className="flex justify-center w-15 absolute bottom-15 right-[8%]">
-          <CarouselPrevious className="w-15 h-15 cursor-pointer" />
-          <CarouselNext className="w-15 h-15 ml-2 cursor-pointer" />
-        </div>
-      </div>
-    </Carousel>
-  )
+  return <BannerCarousel trendingPosts={trendingPosts} />;
 }
 
 export function BannerSectionFallback() {

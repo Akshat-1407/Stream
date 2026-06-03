@@ -53,7 +53,7 @@ export default function ProfileSheet() {
             <span className="text-white text-xl font-medium">{user?.name.at(0).toUpperCase()}</span>
           </div>
         ) : (
-          <Image src="/profile.webp" height={40} width={40} alt="avatar" className="rounded-full"></Image>
+          <Image src="/profile.png" height={40} width={40} alt="avatar" className="rounded-full"></Image>
         )}
       </SheetTrigger>
 
@@ -91,7 +91,7 @@ export default function ProfileSheet() {
                     </Link>
                     <Button
                       onClick={logoutHandler}
-                      className="bg-linear-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white flex items-center justify-center font-semibold text-base h-10 px-8 rounded-full transition-colors cursor-pointer"
+                      className="bg-linear-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white flex justify-center items-center font-semibold text-base h-10 px-12 rounded-full transition-colors cursor-pointer"
                     >
                       Logout
                     </Button>
@@ -101,14 +101,14 @@ export default function ProfileSheet() {
               ) : (
 
                 <div className="flex flex-col items-center w-full">
-                  <Image src="/profile.webp" height={100} width={100} alt="avatar" className="rounded-full flex justify-center mb-4"></Image>
+                  <Image src="/profile.png" height={100} width={100} alt="avatar" className="rounded-full flex justify-center mb-4"></Image>
                   <div>
                     <h3 className="text-white text-xl font-semibold mb-8 flex justify-center">
                       Guest
                     </h3>
                     <Link
                       href="/login"
-                      className="bg-linear-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white flex items-center justify-center font-semibold text-base h-10 px-8 rounded-full transition-colors cursor-pointer"
+                      className="bg-linear-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white flex justify-center items-center font-semibold text-base h-10 px-12 rounded-full transition-colors cursor-pointer"
                       onClick={() => {
                         setOpen(false);
                       }}

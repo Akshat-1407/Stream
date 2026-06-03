@@ -6,9 +6,9 @@ const util = require("util");
 const promisify = util.promisify;
 const promisifiedJWTsign = promisify(jwt.sign);
 const promisifiedJWTVerify = promisify(jwt.verify);
-const sendWelcomeMail = require("../utility/welcomeMailSender");
-const sendOtpMail = require("../utility/otpMailSender");
-const otpGenerator = require("../utility/otpGenerator");
+const sendWelcomeMail = require("../services/mail/welcomeMailSender");
+const sendOtpMail = require("../services/mail/otpMailSender");
+const otpGenerator = require("../utils/otpGenerator");
 
 
 async function signupHandler(req, res) {
