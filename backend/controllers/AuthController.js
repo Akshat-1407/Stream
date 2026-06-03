@@ -74,7 +74,7 @@ async function signupHandler(req, res) {
             maxAge: 1000 * 60 * 60 * 24,
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "strict"
+            sameSite: "none"
         });
 
         // Send Response (Don't send the password back!)
@@ -153,7 +153,7 @@ async function loginHandler(req, res) {
             maxAge: 1000 * 60 * 60 * 24,
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "strict"
+            sameSite: "none"
         });
 
         // Remove the password form the response
