@@ -19,9 +19,14 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Stream",
   description: "Web Streaming App",
+  manifest: "/manifest.json",
   icons: {
     icon: "/app_logo.png"
   }
+};
+
+export const viewport = {
+  themeColor: "#000000",
 };
 
 export default function RootLayout({ children }) {

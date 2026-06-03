@@ -42,7 +42,7 @@ export const ENDPOINT = {
 
   // Video Streaming
   fetchAllStreamingVideos: `/video`,
-  fetchStreamingVideo: (id) => `/video?id=${id}`,
+  fetchStreamingVideo: (id, name) => `/watch?id=${id}&name=${name}`,
   fetchVideoThumbnail: (id) => `/video/thumbnail?videoId=${id}`,
 };
 
@@ -53,7 +53,8 @@ export const media = (path) => `https://image.tmdb.org/t/p/original` + path;
 export const getStreamingVideoThumbnail = (id) =>
   API_BASE_URL + ENDPOINT.fetchVideoThumbnail(id);
 
-
+export const getStreamingVideo = (id, name) => 
+  "/jio+/" + ENDPOINT.fetchStreamingVideo(id, name);
 
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;

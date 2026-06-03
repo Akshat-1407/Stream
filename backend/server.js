@@ -3,11 +3,12 @@ const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
 const cors = require('cors');
-const PORT = 8080;
+const connectDB = require("./config/dbConnection");
 const dotenv = require("dotenv");
 dotenv.config(); 
 
-const connectDB = require("./config/dbConnection");
+const PORT = process.env.PORT;
+
 connectDB();
 
 const AuthRouter = require("./routes/AuthRouter");

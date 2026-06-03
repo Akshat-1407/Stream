@@ -1,4 +1,4 @@
-import { api, ENDPOINT, getStreamingVideoThumbnail } from "../../lib/api";
+import { api, ENDPOINT, getStreamingVideoThumbnail, getStreamingVideo } from "../../lib/api";
 import Link from "next/link";
 import Image from "next/image";
 import { FolderX } from "lucide-react";
@@ -20,7 +20,7 @@ export default async function JioPlus() {
     }
 
     return (
-        <main className="min-h-screen p- md:p-8">
+        <main className="min-h-screen p-8">
             <div className="mb-8">
                 <h1 className="text-3xl md:text-4xl font-bold mb-2">Jio+ Premium Videos</h1>
                 <p className="text-slate-400">Exclusive premium content available for subscribers</p>
@@ -30,13 +30,13 @@ export default async function JioPlus() {
                 {videos.map((video, index) => (
                     <Link
                         key={index}
-                        href={`jio+/watch?id=${video.id}`}
+                        href={getStreamingVideo(video?.id, video?.name)}
                         className="group relative overflow-hidden rounded-lg transition-transform duration-300 hover:scale-105 flex flex-col"
                     >
                         <div className="relative w-full aspect-2/3 bg-slate-800 overflow-hidden rounded-lg">
                             <Image
-                                src={getStreamingVideoThumbnail(video.id)}
-                                alt={video.name || "Premium Video"}
+                                src={getStreamingVideoThumbnail(video?.id)}
+                                alt={video?.name || "Premium Video"}
                                 fill
                                 className="object-cover transition-opacity duration-300 group-hover:opacity-80"
                                 quality={30}

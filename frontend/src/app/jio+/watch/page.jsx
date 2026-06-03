@@ -6,12 +6,13 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useSelector } from "react-redux";
 import { useSearchParams } from 'next/navigation';
-
+import ShareButton from '../../../components/features/ShareButton';
 
 export default function JioPlus() {
 
     const searchParams = useSearchParams();
     const videoId = searchParams.get('id');
+    const videoName = searchParams.get('name');
 
     const userData = useSelector((state) => state.user);
 
@@ -84,16 +85,27 @@ export default function JioPlus() {
         );
     }
 
+
     return (
-        <div className="w-screen flex justify-center">
-            <video
-                src={videoUrl}
-                controls
-                autoPlay
-                muted
-                className="w-[80%]"
-                crossOrigin="anonymous"  // crossOrigin is needed to handle CORS for video resources from a different domain
-            />
+        <div>
+
+            <div className="w-full flex justify-center">
+                <video
+                    src={videoUrl}
+                    controls
+                    autoPlay
+                    muted
+                    className="w-[75%]"
+                    crossOrigin="anonymous"  // crossOrigin is needed to handle CORS for video resources from a different domain
+                />
+            </div>
+            <div className="flex gap-4 px-8 lg:px-20 py-8 items-center justify-between mb-10">
+                <h1 className="text-xl md:text-2xl lg:text-3xl font-bold">{videoName}</h1>
+                <div className="flex gap-6 flex-col sm:flex-row">
+                    <ShareButton />
+                </div>
+            </div>
         </div>
+
     );
 }

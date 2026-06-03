@@ -5,7 +5,7 @@ const path = require("path");
 const getAllVideos = async (req, res) => {
     try {
         const videoDirectory = path.join(__dirname, "..", "media", "videos");
-        
+
         // 1. Non-blocking read
         const files = await fsPromises.readdir(videoDirectory);
 
@@ -14,9 +14,7 @@ const getAllVideos = async (req, res) => {
             .filter(file => path.extname(file).toLowerCase() === ".mp4")
             .map(file => ({
                 id: path.parse(file).name,
-                name: file,
-                // add a thumbnail URL here too!
-                thumbnail: `/api/thumbnail?videoId=${path.parse(file).name}`
+                name: file.replace(/\.[^/.]+$/, "").replace(/_/g, " "), // remove extension and replace underscores with spaces
             }));
 
         res.status(200).json({
@@ -98,7 +96,7 @@ const getVideoStream = async (req, res) => {
     } catch (err) {
         console.error("Video Stream error:", err);
         if (!res.headersSent) {
-            res.status(500).json({ 
+            res.status(500).json({
                 message: "Internal server error",
                 status: "failure"
             });
@@ -113,8 +111,8 @@ const getThumbnail = async (req, res) => {
             return res.status(400).json({ error: 'Video ID is required' });
         }
 
-        const thumbnailPath = path.join(__dirname, '..', 'media', 'thumbnails', `${videoId}.png`);       
-        
+        const thumbnailPath = path.join(__dirname, '..', 'media', 'thumbnails', `${videoId}.png`);
+
         const defaultImage = path.join(__dirname, '..', 'media', 'thumbnails', 'no-thumbnail.png');
         res.sendFile(thumbnailPath, (err) => {
             if (err) res.sendFile(defaultImage);
@@ -122,7 +120,7 @@ const getThumbnail = async (req, res) => {
 
     } catch (err) {
         console.error("Thumbnail Controller Error:", err);
-        res.status(500).json({ 
+        res.status(500).json({
             message: 'Failed to process thumbnail',
             status: "failure"
         });

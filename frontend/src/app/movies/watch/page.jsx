@@ -36,10 +36,9 @@ const page = async ({ searchParams }) => {
               <ShareButton />
             </div>
           </div>
-          <div className="p-5 lg:p-10">
-
-          <h2 className="text-2xl text-pink-600">Description</h2> <br />
-          <p>{description}</p>
+          <div className="p-5 lg:px-10 pt-3 mb-15">
+            <h2 className="text-2xl text-pink-600">Description</h2> <br />
+            <p className="text-xl">{description}</p>
           </div>
         </>
       ) : (

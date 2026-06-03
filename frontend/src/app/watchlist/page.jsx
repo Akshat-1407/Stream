@@ -68,7 +68,7 @@ function Watchlist() {
     );
   }
 
-  
+
   if (!watchlistData || watchlistData.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-[80vh] w-full gap-4">
@@ -104,7 +104,17 @@ function Watchlist() {
                     className="object-cover transition-opacity duration-300 group-hover:opacity-80"
                   />
                 )}
+                <div className="absolute inset-0 bg-linear-to-b from-transparent to-black opacity-0 group-hover:opacity-40 transition-opacity duration-300" />
               </div>
+              {/* Play Icon on Hover */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="bg-rose-500 hover:bg-rose-600 rounded-full p-3">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                  </svg>
+                </div>
+              </div>
+
               <div className="mt-2">
                 <p className="text-sm font-medium text-white truncate group-hover:text-blue-400">
                   {item?.name || item?.title}
