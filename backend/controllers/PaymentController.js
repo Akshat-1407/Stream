@@ -46,14 +46,18 @@ const updatePremiumAccessController = async (req, res) => {
             { new: true }
         );
 
-        await sendPaymentSuccessMail(
-            updatedUser.name,
-            updatedUser.email,
-            planName,
-            amount,
-            paymentId,
-            orderId
-        );
+        try {
+            await sendPaymentSuccessMail(
+                updatedUser.name,
+                updatedUser.email,
+                planName,
+                amount,
+                paymentId,
+                orderId
+            );
+        } catch (emailErr) {
+            console.error("Failed to Send Payment Email:", emailErr);
+        }
 
         return res.status(200).json({
             message: {

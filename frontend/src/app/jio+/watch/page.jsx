@@ -89,14 +89,14 @@ export default function JioPlus() {
     return (
         <div>
 
-            <div className="w-full flex justify-center">
+            <div className="flex justify-center">
                 <video
                     src={videoUrl}
                     controls
                     autoPlay
                     muted
-                    className="w-[75%]"
-                    crossOrigin="anonymous"  // crossOrigin is needed to handle CORS for video resources from a different domain
+                    className="xl:h-[80vh]"
+                    crossOrigin="anonymous" // crossOrigin is needed to handle CORS for video resources from a different domain
                 />
             </div>
             <div className="flex gap-4 px-8 lg:px-20 py-8 items-center justify-between mb-10">

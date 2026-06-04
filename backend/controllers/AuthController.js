@@ -59,7 +59,7 @@ async function signupHandler(req, res) {
         const newUser = await UserModel.create({
             name,
             email,
-            password, 
+            password,
             confirmPassword
         });
 
@@ -74,13 +74,15 @@ async function signupHandler(req, res) {
             maxAge: 1000 * 60 * 60 * 24,
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "none"
+            sameSite: process.env.NODE_ENV === "production"
+                ? "none"
+                : "lax",
         });
 
         // Send Response (Don't send the password back!)
         newUser.confirmPassword = undefined;
-        newUser.password = undefined; 
-        
+        newUser.password = undefined;
+
         // Send successful signup response
         res.status(201).json({
             message: "User signed up successfully",
@@ -92,7 +94,7 @@ async function signupHandler(req, res) {
         try {
             await sendWelcomeMail(newUser.email, newUser.name);
         } catch (emailErr) {
-            console.log("Post-signup email failed:", emailErr);
+            console.error("Failed to Send Post Signup Email:", emailErr);
         }
 
     } catch (err) {
@@ -132,7 +134,7 @@ async function loginHandler(req, res) {
         }
 
         // Verify password
-        const areEqual = await bcrypt.compare(password,user.password);
+        const areEqual = await bcrypt.compare(password, user.password);
 
         // Return error if password is incorrect
         if (!areEqual) {
@@ -153,12 +155,14 @@ async function loginHandler(req, res) {
             maxAge: 1000 * 60 * 60 * 24,
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "none"
+            sameSite: process.env.NODE_ENV === "production"
+                ? "none"
+                : "lax",
         });
 
         // Remove the password form the response
         user.confirmPassword = undefined;
-        user.password = undefined; 
+        user.password = undefined;
 
         // Send successful login response
         return res.status(200).json({
@@ -199,10 +203,10 @@ async function logoutHandler(req, res) {
 async function protectRouteMiddleware(req, res, next) {
     try {
         const jwttoken = req.cookies.jwt;
-        
+
         if (!jwttoken) {
             return res.status(401).json({
-                 message: "You are not logged in" 
+                message: "You are not logged in"
             });
         }
 
@@ -213,23 +217,23 @@ async function protectRouteMiddleware(req, res, next) {
         const user = await UserModel.findById(decoded.id) //.select("-password -__v");
 
         if (!user) {
-            return res.status(401).json({ 
-                message: "User no longer exists" 
+            return res.status(401).json({
+                message: "User no longer exists"
             });
         }
 
         // Attach the user object
-        req.user = user; 
+        req.user = user;
         next();
-        
+
     } catch (err) {
-        const errorMessage = err.name === 'TokenExpiredError' 
-            ? "Session expired, please login again" 
+        const errorMessage = err.name === 'TokenExpiredError'
+            ? "Session expired, please login again"
             : "Invalid token, please login again";
 
-        return res.status(401).json({ 
+        return res.status(401).json({
             status: "failure",
-            message: errorMessage 
+            message: errorMessage
         });
     }
 };
@@ -278,7 +282,11 @@ async function forgetPasswordHandler(req, res) {
         await user.save({ validateBeforeSave: false });
 
         // Send OTP to the user's email
-        await sendOtpMail(user.name, user.email, otp);
+        try {
+            await sendOtpMail(user.name, user.email, otp);
+        } catch (emailErr) {
+            console.error("Failed to Send OTP Email:", emailErr);
+        }
 
         // Send success response
         return res.status(200).json({
@@ -330,7 +338,7 @@ async function verifyOtpHandler(req, res) {
                 message: "User not found"
             });
         }
- 
+
 
         // Verify that a reset OTP exists
         if (!user.otp) {
@@ -355,7 +363,7 @@ async function verifyOtpHandler(req, res) {
                 message: "Invalid OTP"
             });
         }
- 
+
         // Generate temporary token 
         // This token proves that OTP verification was completed successfully.
         const resetToken = crypto.randomBytes(32).toString("hex");

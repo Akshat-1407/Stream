@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
+import NextTopLoader from 'nextjs-toploader';
 import StoreProvider from "@/providers/StoreProvider";
 import AuthProvider from "@/providers/AuthProvider";
 import { Toaster } from "@/components/ui/sonner"
@@ -36,6 +37,16 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <NextTopLoader
+          color="#DB2777"         // Changes the color of the bar
+          initialPosition={0.08}  // Starting percentage
+          crawlSpeed={200}        // Speed of the creeping animation (ms)
+          height={3}              // Height of the bar in pixels
+          crawl={true}            // Keeps the bar moving slowly while loading
+          showSpinner={false}     // Turns off the circular spinner in the top right corner
+          easing="ease"           // CSS easing animation */}
+          speed={200}             // Animation speed for jumps (ms)
+        />
         <StoreProvider>
           <AuthProvider>
             <Header />

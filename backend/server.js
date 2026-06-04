@@ -23,7 +23,7 @@ const PaymentRouter = require("./routes/PaymentRouter");
 
 
 app.use(cors({
-  origin: true,
+  origin: "https://stream-seven-mocha.vercel.app",
   credentials: true
 }));
 
