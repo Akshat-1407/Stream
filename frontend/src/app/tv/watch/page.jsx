@@ -20,6 +20,8 @@ const page = async ({ searchParams }) => {
             title={details?.key}
             src={`https://www.youtube-nocookie.com/embed/${key}`}
             className="w-full aspect-video lg:h-[70vh]"
+            allow="fullscreen"
+            allowFullScreen
           />
   
           <div className="flex gap-4 px-5 lg:px-10 py-8 items-center justify-between">

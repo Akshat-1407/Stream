@@ -1,3 +1,57 @@
+const ejs = require('ejs');
+const path = require('path');
+
+async function sendOtpMail(userName, userEmail, otp) {
+    try {
+        // 1. Render the EJS template
+        const htmlData = await ejs.renderFile(
+            path.join(__dirname, "..", "..", 'templates', 'otp.ejs'), 
+            { userName, otp }
+        );
+
+        // 2. Construct the clean payload
+        const payload = {
+            sender: { 
+                email: process.env.SENDER_EMAIL 
+            },
+            to: [
+                { email: userEmail, name: userName }
+            ],
+            subject: 'OTP',
+            htmlContent: htmlData,
+        };
+
+        // 3. Send the POST request to Brevo over HTTPS
+        const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'api-key': process.env.BREVO_API_KEY,
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            console.log('Email sent successfully via HTTP API. Message ID:', result.messageId);
+        } else {
+            console.error('Brevo API Error Response:', result);
+        }
+
+    } catch (error) {
+        console.error('Error sending email:', error);
+    }
+}
+
+module.exports = sendOtpMail;
+
+
+
+
+
+/*
 const nodemailer = require('nodemailer');
 const ejs = require('ejs');
 const path = require('path');
@@ -50,3 +104,4 @@ async function sendOtpMail(userName, userEmail, otp) {
 }
 
 module.exports = sendOtpMail;
+*/
