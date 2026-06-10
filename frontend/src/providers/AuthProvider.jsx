@@ -1,7 +1,7 @@
 "use client";
 
 import { api, ENDPOINT } from "../lib/api";
-import { LoaderCircle } from "lucide-react";
+import { Loader } from "../components/ui/loader"
 import { useEffect, useState } from "react";
 import { useDispatch } from 'react-redux'
 import { userLoggedInDetails } from "@/redux/userSlice";
@@ -20,7 +20,7 @@ const AuthProvider = ({ children }) => {
         const fetcher = async () => {
             try {
                 const res = await api.get(ENDPOINT.user);
-                
+
                 if (res.data.status === "success") {
                     dispatch(userLoggedInDetails(res?.data?.user));
                 }
@@ -41,7 +41,7 @@ const AuthProvider = ({ children }) => {
     if (loading)
         return (
             <div className="w-full h-screen flex items-center justify-center">
-                <LoaderCircle className="w-20 h-20 animate-spin" />
+                <Loader />
             </div>
         );
 
