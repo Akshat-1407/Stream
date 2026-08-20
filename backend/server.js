@@ -5,6 +5,8 @@ if(process.env.NODE_ENV != "production") {
 const mongoose = require("mongoose");
 const express = require("express");
 const app = express();
+const http = require("http");
+const server = http.createServer(app);
 const cookieParser = require("cookie-parser");
 const cors = require('cors');
 const connectDB = require("./config/dbConnection");
@@ -20,7 +22,10 @@ const TvRouter = require("./routes/TvRouter");
 const VideoRouter = require("./routes/VideoRouter");
 const UserRouter = require("./routes/UserRouter");
 const PaymentRouter = require("./routes/PaymentRouter");
+const RoomRouter = require("./routes/RoomRouter");
 
+// Initialize Socket.IO
+require("./socket").init(server);
 
 app.use(cors({
   origin: [
@@ -36,14 +41,15 @@ app.use(cookieParser());
 app.use("/api/auth", AuthRouter);
 app.use("/api/user", UserRouter);
 app.use("/api/discover", DiscoverRouter);
+app.use("/api/rooms", RoomRouter);
 app.use("/api/movies", MovieRouter);
 app.use("/api/tv", TvRouter);
 app.use("/api/video", VideoRouter);
 app.use("/api/payment", PaymentRouter);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server started on port ${PORT}...`);
-})
+});
 
 
 

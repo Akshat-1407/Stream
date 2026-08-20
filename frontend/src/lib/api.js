@@ -14,6 +14,10 @@ export const ENDPOINT = {
   payment: "/payment/order",
   updatePremium: "/payment/update-premium-access",
 
+  // Watch Party Rooms
+  createRoom: "/rooms",
+  getRoomDetails: (roomId) => `/rooms/${roomId}`,
+
   // Watchlist
   addToWishlist: "/user/watchlist",
   getWishlist: "/user/watchlist",

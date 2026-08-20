@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from "react-redux";
 import { useSearchParams } from 'next/navigation';
 import ShareButton from '../../../components/features/ShareButton';
+import CreateRoomButton from '../../../components/features/CreateRoomButton';
 
 export default function JioPlus() {
     const searchParams = useSearchParams();
@@ -133,6 +134,13 @@ export default function JioPlus() {
             <div className="flex gap-4 px-8 lg:px-20 py-8 items-center justify-between mb-10">
                 <h1 className="text-xl md:text-2xl lg:text-3xl font-bold">{videoName}</h1>
                 <div className="flex gap-6 flex-col sm:flex-row">
+                    <CreateRoomButton
+                        movieId={videoId}
+                        mediaType="premium"
+                        movieName={videoName}
+                        posterPath={""}
+                        description="Premium video stream on Jio+"
+                    />
                     <ShareButton />
                 </div>
             </div>

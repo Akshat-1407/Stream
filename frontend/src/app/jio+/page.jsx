@@ -75,7 +75,7 @@ export default function VideoCatalog() {
                                         />
 
                                         {/* Subtle Dark Gradient Overlay */}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                                        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
                                     </Link>
                                 </CarouselItem>
                             ))}
@@ -107,10 +107,10 @@ export default function VideoCatalog() {
                                 <Link
                                     key={video.id}
                                     href={`/jio+/watch?id=${encodeURIComponent(video.id)}&name=${encodeURIComponent(video.name)}`}
-                                    className="group flex-none w-[160px] sm:w-[180px] md:w-[200px] lg:w-[220px] snap-start"
+                                    className="group flex-none w-40 sm:w-45 md:w-50 lg:w-55 snap-start"
                                 >
                                     {/* Poster Card Container */}
-                                    <div className="aspect-[2/3] w-full relative overflow-hidden rounded-xl bg-neutral-900 border border-transparent transition-all duration-300">
+                                    <div className="aspect-2/3 w-full relative overflow-hidden rounded-xl bg-neutral-900 border border-transparent transition-all duration-300">
                                         <img
                                             src={`${API_BASE_URL}/video/thumbnail?videoId=${encodeURIComponent(video.id)}`}
                                             alt={video.name}
