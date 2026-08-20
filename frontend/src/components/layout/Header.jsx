@@ -13,7 +13,7 @@ const navItems = [
   { label: "Movies", key: "movies", href: "/movies",},
   { label: "Tv Shows", key: "tv", href: "/tv" },
   { label: "Watchlist", key: "watchlist", href: "/watchlist" },
-  { label: "Jio+", key: "jio+", href: "/jio+" },
+  { label: "Stream +", key: "stream+", href: "/stream+" },
 ]
 
 export function Header() {

@@ -8,8 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Film, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
-// import { useSocket, useWatchRoom, usePlaybackSync, useRoomChat } from "./watchRoomHooks";
-
 import { useSocket } from "./hooks/useSocket";
 import { useWatchRoom } from "./hooks/useWatchRoom";
 import { usePlaybackSync } from "./hooks/usePlaybackSync";
@@ -49,6 +47,12 @@ export default function WatchRoomPage() {
             return;
         }
 
+        if (!user?.isPremium) {
+            toast.error("Please purchase premium to watch premium content");
+            router.push("/subscription");
+            return;
+        }
+
         const fetchDetails = async () => {
             try {
                 setLoadingRoom(true);
@@ -67,7 +71,7 @@ export default function WatchRoomPage() {
         };
 
         fetchDetails();
-    }, [roomId, isLoggedIn]);
+    }, [roomId, isLoggedIn, user?.isPremium]);
 
     // 2. Fetch R2 Video Stream URL once room details are available
     useEffect(() => {
@@ -123,7 +127,7 @@ export default function WatchRoomPage() {
         }
 
         const redirectTimer = setTimeout(() => {
-            router.push("/jio+");
+            router.push("/stream+");
         }, 1200);
 
         return () => clearTimeout(redirectTimer);

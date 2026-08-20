@@ -48,6 +48,14 @@ export const ENDPOINT = {
   fetchAllStreamingVideos: `/video`,
   fetchStreamingVideo: (id, name) => `/watch?id=${id}&name=${name}`,
   fetchVideoThumbnail: (id) => `/video/thumbnail?videoId=${id}`,
+
+  // Comments — movieId is a query/body field because IDs can contain slashes
+  getComments: "/comments",
+  addComment: "/comments",
+  addReply: (commentId) => `/comments/${commentId}/reply`,
+  likeComment: (commentId) => `/comments/${commentId}/like`,
+  dislikeComment: (commentId) => `/comments/${commentId}/dislike`,
+  deleteComment: (commentId) => `/comments/${commentId}`,
 };
 
 
@@ -58,7 +66,7 @@ export const getStreamingVideoThumbnail = (id) =>
   API_BASE_URL + ENDPOINT.fetchVideoThumbnail(id);
 
 export const getStreamingVideo = (id, name) => 
-  "/jio+/" + ENDPOINT.fetchStreamingVideo(id, name);
+  "/stream+/" + ENDPOINT.fetchStreamingVideo(id, name);
 
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -75,13 +83,17 @@ api.interceptors.response.use(
   async (error) => {
     const { config, response } = error;
 
+    if (!config) {
+      return Promise.reject(error);
+    }
+
     // Only retry on network errors or 5xx server errors
     // DO NOT retry on 4xx client errors (validation errors)
     const isRetryable = !response || response.status >= 500;
 
     // 1. Check if we should retry
-    // We only retry if the request exists and we haven't hit the limit (e.g., 3 tries)
-    if (!config || !config.retryCount) {
+    // We only retry if we haven't hit the limit (e.g., 3 tries)
+    if (!config.retryCount) {
       config.retryCount = 0;
     }
 

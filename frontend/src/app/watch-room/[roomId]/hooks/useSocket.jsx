@@ -16,6 +16,7 @@ export function useSocket(roomId) {
     console.log("Connecting to socket server:", socketUrl);
     const socket = io(socketUrl, {
       withCredentials: true,
+      transports: ["websocket", "polling"],
       reconnectionAttempts: 10,
       reconnectionDelay: 1000,
     });

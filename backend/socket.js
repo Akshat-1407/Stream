@@ -72,7 +72,7 @@ const init = (server) => {
     io = new Server(server, {
         cors: {
             origin: [
-                "https://stream-seven-mocha.vercel.app",
+                process.env.FRONTEND_URL,
                 "http://localhost:3000"
             ],
             credentials: true

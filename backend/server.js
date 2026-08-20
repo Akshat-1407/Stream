@@ -23,13 +23,14 @@ const VideoRouter = require("./routes/VideoRouter");
 const UserRouter = require("./routes/UserRouter");
 const PaymentRouter = require("./routes/PaymentRouter");
 const RoomRouter = require("./routes/RoomRouter");
+const CommentRouter = require("./routes/CommentRouter");
 
 // Initialize Socket.IO
 require("./socket").init(server);
 
 app.use(cors({
   origin: [
-    "https://stream-seven-mocha.vercel.app",
+    process.env.FRONTEND_URL,
     "http://localhost:3000"
   ],
   credentials: true
@@ -37,6 +38,12 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
+
+// Request logger middleware for debugging route paths
+app.use((req, res, next) => {
+  console.log(`[Backend Request] ${req.method} ${req.originalUrl || req.url}`);
+  next();
+});
 
 app.use("/api/auth", AuthRouter);
 app.use("/api/user", UserRouter);
@@ -46,6 +53,7 @@ app.use("/api/movies", MovieRouter);
 app.use("/api/tv", TvRouter);
 app.use("/api/video", VideoRouter);
 app.use("/api/payment", PaymentRouter);
+app.use("/api/comments", CommentRouter);
 
 server.listen(PORT, () => {
     console.log(`Server started on port ${PORT}...`);

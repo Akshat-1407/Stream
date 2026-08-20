@@ -17,7 +17,7 @@ const navItems = [
   { label: "Movies", href: "/movies" },
   { label: "Tv Shows", href: "/tv" },
   { label: "Watchlist", href: "/watchlist" },
-  { label: "Jio+", href: "/jio+" },
+  { label: "Stream +", href: "/stream+" },
 ];
 
 export default function ProfileSheet() {

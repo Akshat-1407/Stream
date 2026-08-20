@@ -53,11 +53,10 @@ export default function BannerCarousel({ trendingPosts }) {
         ))}
       </CarouselContent>
 
-      <div className="absolute bottom-15 right-[8%] hidden md:flex">
-        <div className="flex w-15">
-          <CarouselPrevious className="w-15 h-15 cursor-pointer" />
-          <CarouselNext className="w-15 h-15 ml-2 cursor-pointer" />
-        </div>
+      {/* Carousel Navigation Buttons */}
+      <div className="absolute bottom-4 right-8 flex gap-7 z-10 pointer-events-auto">
+        <CarouselPrevious className="static translate-x-0 translate-y-0 w-15 h-15 bg-black/70 border-slate-700 text-white" />
+        <CarouselNext className="static translate-x-0 translate-y-0 w-15 h-15 bg-black/70 border-slate-700 text-white" />
       </div>
     </Carousel>
   );
