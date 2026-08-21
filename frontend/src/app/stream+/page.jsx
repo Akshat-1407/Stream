@@ -20,7 +20,7 @@ export default function VideoCatalog() {
 
     const autoplay = useRef(
         Autoplay({
-            delay: 3000,
+            delay: 10000,
             stopOnMouseEnter: true,
             stopOnInteraction: false,
         })
@@ -56,7 +56,7 @@ export default function VideoCatalog() {
     const genreCategories = Object.entries(categories).filter(([genre]) => genre !== "trending");
 
     return (
-        <div className="min-h-screen bg-black text-white px-6 md:px-12 py-6 space-y-12 font-sans">
+        <div className="min-h-screen bg-black text-white py-6 space-y-12 font-sans">
             {/* Top Section: Featured Hero Carousel */}
             {trendingVideos.length > 0 && (
                 <section className="relative w-full">
@@ -104,7 +104,7 @@ export default function VideoCatalog() {
                 <p className="text-slate-400">No videos available.</p>
             ) : (
                 genreCategories.map(([genre, videos]) => (
-                    <section key={genre} className="space-y-4">
+                    <section key={genre} className="space-y-4 px-6">
                         {/* Genre Header */}
                         <h2 className="text-2xl font-semibold capitalize text-white">
                             {genre}

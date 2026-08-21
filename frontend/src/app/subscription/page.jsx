@@ -117,7 +117,7 @@ function SubscriptionPage() {
               dispatch(updateUserPremium(true))
               toast.success("Premium access updated successfully")
             }
-            router.push("/jio+");
+            router.push("/stream+");
           } catch (err) {
             console.error(err)
           }
