@@ -45,9 +45,9 @@ export const ENDPOINT = {
   getTvShowsDetails: (id) => `/tv/details?id=${id}`,
 
   // Video Streaming
-  fetchAllStreamingVideos: `/video`,
-  fetchStreamingVideo: (id, name) => `/watch?id=${id}&name=${name}`,
-  fetchVideoThumbnail: (id) => `/video/thumbnail?videoId=${id}`,
+  // fetchAllStreamingVideos: `/video`,
+  // fetchStreamingVideo: (id, name) => `/watch?id=${id}&name=${name}`,
+  // fetchVideoThumbnail: (id) => `/video/thumbnail?videoId=${id}`,
 
   // Comments — movieId is a query/body field because IDs can contain slashes
   getComments: "/comments",

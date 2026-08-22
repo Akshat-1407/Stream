@@ -78,11 +78,9 @@ export default function VideoCatalog() {
                                         href={`/stream+/watch?id=${encodeURIComponent(video.id)}&name=${encodeURIComponent(video.name)}`}
                                         className="block relative w-full h-full"
                                     >
-                                        <Image
+                                        <img
                                             src={`${API_BASE_URL}/video/thumbnail?videoId=${encodeURIComponent(video.id)}`}
                                             alt={video.name}
-                                            width={700}
-                                            height={500}
                                             className="bg-slate-600 rounded-lg object-cover w-full h-full"
                                         />
                                     </Link>

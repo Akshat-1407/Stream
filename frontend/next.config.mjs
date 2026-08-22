@@ -1,14 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-      images:{
+    images: {
         unoptimized: process.env.NODE_ENV === 'development',
         remotePatterns: [
             {
-                hostname: "image.tmdb.org"
+                protocol: "https",
+                hostname: "image.tmdb.org",
             },
             {
-                hostname: "localhost"
-            }
+                protocol: "https",
+                hostname: "localhost",
+            },
         ]
     }
 };
