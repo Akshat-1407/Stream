@@ -25,7 +25,7 @@ async function signupHandler(req, res) {
      * 7. Store the JWT in an HTTP-only cookie.
      * 8. Remove sensitive fields from the response.
      * 9. Send a successful signup response.
-     * 10. Send a welcome email to the newly registered user.
+    
      */
 
     try {
